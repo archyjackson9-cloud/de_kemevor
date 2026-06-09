@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Partner;
 use App\Models\Service;
 
 class HomeController extends Controller
@@ -13,6 +14,11 @@ class HomeController extends Controller
             ->limit(6)
             ->get();
 
-        return view('home', compact('featuredServices'));
+        $partners = Partner::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        return view('home', compact('featuredServices', 'partners'));
     }
 }

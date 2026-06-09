@@ -21,7 +21,7 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>#</th><th>Name</th><th>Category</th><th>Duration</th><th>Price From</th><th>Status</th><th>Actions</th>
+                    <th>#</th><th>Image</th><th>Name</th><th>Category</th><th>Duration</th><th>Price From</th><th>Status</th><th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,8 +29,15 @@
                 <tr>
                     <td>{{ $s->sort_order }}</td>
                     <td>
+                        @if($s->image)
+                        <img src="{{ $s->image_url }}" alt="{{ $s->name }}" class="admin-thumb">
+                        @else
+                        <div class="admin-thumb-empty"><i class="fas fa-image"></i></div>
+                        @endif
+                    </td>
+                    <td>
                         <strong>{{ $s->name }}</strong>
-                        <div class="admin-table__sub">{{ Str::limit($s->short_description, 60) }}</div>
+                        <div style="font-size:12px;color:#888;max-width:280px">{{ Str::limit($s->short_description, 55) }}</div>
                     </td>
                     <td>
                         <span class="category-badge category-badge--{{ $s->category }}">
@@ -48,7 +55,8 @@
                         </form>
                     </td>
                     <td class="admin-table__actions">
-                        <button class="btn btn-xs btn-outline" onclick="editService({{ $s->id }}, '{{ addslashes($s->name) }}', '{{ $s->category }}', '{{ addslashes($s->short_description) }}', '{{ $s->duration }}', {{ $s->price_from }}, {{ $s->sort_order }})">
+                        <button class="btn btn-xs btn-outline"
+                            onclick="editService({{ $s->id }}, '{{ addslashes($s->name) }}', '{{ $s->category }}', '{{ addslashes($s->short_description) }}', '{{ $s->duration }}', {{ $s->price_from }}, {{ $s->sort_order }}, '{{ $s->image ? $s->image_url : '' }}')">
                             <i class="fas fa-edit"></i>
                         </button>
                         <form method="POST" action="{{ route('admin.services.destroy', $s->id) }}" style="display:inline"
@@ -72,7 +80,7 @@
             <h3>Add New Service</h3>
             <button onclick="document.getElementById('addServiceModal').style.display='none'" class="admin-modal__close">×</button>
         </div>
-        <form method="POST" action="{{ route('admin.services.store') }}" class="thr-form">
+        <form method="POST" action="{{ route('admin.services.store') }}" class="thr-form" enctype="multipart/form-data">
             @csrf
             <div class="thr-form__row">
                 <div class="thr-form__group">
@@ -108,7 +116,11 @@
                     <input type="number" name="sort_order" placeholder="15">
                 </div>
             </div>
-            <div class="admin-modal__actions">
+            <div class="thr-form__group">
+                <label>Service Image <span style="font-size:12px;color:#888">(JPEG/PNG/WebP, max 2MB)</span></label>
+                <input type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/webp" class="admin-file-input">
+            </div>
+            <div style="display:flex;gap:1rem;justify-content:flex-end;margin-top:1rem">
                 <button type="button" class="btn btn-outline" onclick="document.getElementById('addServiceModal').style.display='none'">Cancel</button>
                 <button type="submit" class="btn btn-gold">Add Service</button>
             </div>
@@ -123,7 +135,7 @@
             <h3>Edit Service</h3>
             <button onclick="document.getElementById('editServiceModal').style.display='none'" class="admin-modal__close">×</button>
         </div>
-        <form method="POST" id="editServiceForm" class="thr-form">
+        <form method="POST" id="editServiceForm" class="thr-form" enctype="multipart/form-data">
             @csrf @method('PUT')
             <div class="thr-form__row">
                 <div class="thr-form__group">
@@ -158,7 +170,18 @@
                     <input type="number" name="sort_order" id="editSort">
                 </div>
             </div>
-            <div class="admin-modal__actions">
+            <div class="thr-form__group">
+                <label>Service Image</label>
+                <div id="editCurrentImage" style="display:none;margin-bottom:.75rem">
+                    <img id="editImagePreview" src="" alt="" style="height:80px;border-radius:8px;object-fit:cover;border:1px solid #e5e7eb">
+                    <label style="display:flex;align-items:center;gap:.4rem;margin-top:.5rem;font-size:13px;cursor:pointer;color:#dc2626">
+                        <input type="checkbox" name="remove_image" value="1"> Remove current image
+                    </label>
+                </div>
+                <input type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/webp" class="admin-file-input">
+                <span style="font-size:12px;color:#888">Upload a new image to replace the current one.</span>
+            </div>
+            <div style="display:flex;gap:1rem;justify-content:flex-end;margin-top:1rem">
                 <button type="button" class="btn btn-outline" onclick="document.getElementById('editServiceModal').style.display='none'">Cancel</button>
                 <button type="submit" class="btn btn-gold">Save Changes</button>
             </div>
@@ -170,7 +193,7 @@
 
 @push('scripts')
 <script>
-function editService(id, name, category, desc, duration, price, sort) {
+function editService(id, name, category, desc, duration, price, sort, imageUrl) {
     document.getElementById('editServiceForm').action = `/admin/services/${id}`;
     document.getElementById('editName').value     = name;
     document.getElementById('editCategory').value = category;
@@ -178,6 +201,20 @@ function editService(id, name, category, desc, duration, price, sort) {
     document.getElementById('editDuration').value = duration;
     document.getElementById('editPrice').value    = price;
     document.getElementById('editSort').value     = sort;
+
+    const imgWrap = document.getElementById('editCurrentImage');
+    const imgEl   = document.getElementById('editImagePreview');
+    if (imageUrl) {
+        imgEl.src = imageUrl;
+        imgWrap.style.display = 'block';
+    } else {
+        imgWrap.style.display = 'none';
+    }
+    // Reset file input and checkbox
+    document.querySelector('#editServiceForm input[name="image"]').value = '';
+    const cb = document.querySelector('#editServiceForm input[name="remove_image"]');
+    if (cb) cb.checked = false;
+
     document.getElementById('editServiceModal').style.display = 'flex';
 }
 </script>

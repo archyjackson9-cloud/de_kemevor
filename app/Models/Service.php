@@ -9,7 +9,7 @@ class Service extends Model
 {
     protected $fillable = [
         'name', 'slug', 'category', 'short_description', 'description',
-        'duration', 'price_from', 'is_active', 'sort_order',
+        'duration', 'price_from', 'is_active', 'sort_order', 'image',
     ];
 
     protected $casts = [
@@ -42,6 +42,13 @@ class Service extends Model
             'rejuvenation'      => 'purple',
             default             => 'gold',
         };
+    }
+
+    public function getImageUrlAttribute(): string
+    {
+        return $this->image
+            ? asset('storage/' . $this->image)
+            : '';
     }
 
     public static function getCategoryIcon(string $category): string

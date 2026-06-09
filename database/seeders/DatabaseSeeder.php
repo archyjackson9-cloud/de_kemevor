@@ -8,6 +8,7 @@ use App\Models\PromoCode;
 use App\Models\Service;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Database\Seeders\PageSettingsSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -134,6 +135,9 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        // ── Page Settings ─────────────────────────────────────────────
+        $this->call(PageSettingsSeeder::class);
 
         // ── Promo Codes ───────────────────────────────────────────────
         PromoCode::firstOrCreate(['code' => 'HEAL10'], [

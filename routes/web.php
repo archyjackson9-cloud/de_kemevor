@@ -13,6 +13,9 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\ReminderController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\TeamMemberController;
+use App\Http\Controllers\Admin\PartnerController;
+use App\Http\Controllers\Admin\PageController;
 use Illuminate\Support\Facades\Route;
 
 // ── Public Routes ──────────────────────────────────────────────────────────
@@ -75,4 +78,34 @@ Route::middleware(\App\Http\Middleware\AdminAuthenticate::class)->prefix('admin'
 
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('admin.reports');
+
+    // Team Members
+    Route::get('/team',                    [TeamMemberController::class, 'index'])       ->name('admin.team');
+    Route::post('/team',                   [TeamMemberController::class, 'store'])       ->name('admin.team.store');
+    Route::put('/team/{team}',             [TeamMemberController::class, 'update'])      ->name('admin.team.update');
+    Route::delete('/team/{team}',          [TeamMemberController::class, 'destroy'])     ->name('admin.team.destroy');
+    Route::post('/team/{team}/toggle',     [TeamMemberController::class, 'toggleActive'])->name('admin.team.toggle');
+
+    // Partners
+    Route::get('/partners',                   [PartnerController::class, 'index'])       ->name('admin.partners');
+    Route::post('/partners',                  [PartnerController::class, 'store'])       ->name('admin.partners.store');
+    Route::put('/partners/{partner}',         [PartnerController::class, 'update'])      ->name('admin.partners.update');
+    Route::delete('/partners/{partner}',      [PartnerController::class, 'destroy'])     ->name('admin.partners.destroy');
+    Route::post('/partners/{partner}/toggle', [PartnerController::class, 'toggleActive'])->name('admin.partners.toggle');
+
+    // Pages — About
+    Route::get('/pages/about',    [PageController::class, 'about'])      ->name('admin.pages.about');
+    Route::post('/pages/about',   [PageController::class, 'updateAbout'])->name('admin.pages.about.update');
+    Route::post('/pages/about/values',                    [PageController::class, 'storeValue'])  ->name('admin.pages.about.values.store');
+    Route::put('/pages/about/values/{aboutValue}',        [PageController::class, 'updateValue']) ->name('admin.pages.about.values.update');
+    Route::delete('/pages/about/values/{aboutValue}',     [PageController::class, 'destroyValue'])->name('admin.pages.about.values.destroy');
+    Route::post('/pages/about/values/{aboutValue}/toggle',[PageController::class, 'toggleValue']) ->name('admin.pages.about.values.toggle');
+    Route::post('/pages/about/certs',                         [PageController::class, 'storeCert'])  ->name('admin.pages.about.certs.store');
+    Route::put('/pages/about/certs/{aboutCertification}',     [PageController::class, 'updateCert']) ->name('admin.pages.about.certs.update');
+    Route::delete('/pages/about/certs/{aboutCertification}',  [PageController::class, 'destroyCert'])->name('admin.pages.about.certs.destroy');
+    Route::post('/pages/about/certs/{aboutCertification}/toggle',[PageController::class,'toggleCert'])->name('admin.pages.about.certs.toggle');
+
+    // Pages — Contact
+    Route::get('/pages/contact',  [PageController::class, 'contact'])       ->name('admin.pages.contact');
+    Route::post('/pages/contact', [PageController::class, 'updateContact']) ->name('admin.pages.contact.update');
 });

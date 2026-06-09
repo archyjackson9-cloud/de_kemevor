@@ -1,13 +1,24 @@
 @extends('layouts.app')
-@section('title', 'Contact Us | The Healing Room Aesthetic Clinic')
+@section('title', $s->get('contact_hero_title', 'Contact Us') . ' | The Healing Room Aesthetic Clinic')
 
 @section('content')
 
-<section class="thr-page-hero thr-page-hero--contact">
+{{-- ── PAGE HERO ────────────────────────────────────────────────────── --}}
+<section class="thr-page-hero"
+    @if($s->get('contact_hero_type') === 'image' && $s->get('contact_hero_media'))
+        style="background-image:url('{{ asset('storage/'.$s->get('contact_hero_media')) }}');background-size:cover;background-position:center;"
+    @endif
+>
+    @if($s->get('contact_hero_type') === 'video' && $s->get('contact_hero_media'))
+    <video class="thr-page-hero__video-bg" autoplay muted loop playsinline>
+        <source src="{{ asset('storage/'.$s->get('contact_hero_media')) }}" type="video/mp4">
+    </video>
+    @endif
+    <div class="thr-page-hero__overlay"></div>
     <div class="thr-page-hero__content">
-        <p class="thr-page-hero__eyebrow">We're Here For You</p>
-        <h1 class="thr-page-hero__title">Get In Touch</h1>
-        <p class="thr-page-hero__sub">Questions? We'd love to hear from you. Send us a message or give us a call.</p>
+        <p class="thr-page-hero__eyebrow">{{ $s->get('contact_hero_eyebrow', "We're Here For You") }}</p>
+        <h1 class="thr-page-hero__title">{{ $s->get('contact_hero_title', 'Get In Touch') }}</h1>
+        <p class="thr-page-hero__sub">{{ $s->get('contact_hero_sub', "Questions? We'd love to hear from you. Send us a message or give us a call.") }}</p>
     </div>
 </section>
 
@@ -62,61 +73,78 @@
 
             {{-- Contact Info --}}
             <div class="thr-contact-info">
+                @if($s->get('contact_phone'))
                 <div class="thr-info-card">
                     <div class="thr-info-card__icon"><i class="fas fa-phone"></i></div>
                     <div>
                         <h4>Phone / WhatsApp</h4>
-                        <a href="tel:0597173323">0597173323</a>
+                        <a href="tel:{{ preg_replace('/\s+/','',$s->get('contact_phone')) }}">{{ $s->get('contact_phone') }}</a>
                     </div>
                 </div>
+                @endif
+
+                @if($s->get('contact_website'))
                 <div class="thr-info-card">
                     <div class="thr-info-card__icon"><i class="fas fa-globe"></i></div>
                     <div>
                         <h4>Website</h4>
-                        <a href="https://www.thehealingroom.com" target="_blank">www.thehealingroom.com</a>
+                        <a href="{{ $s->get('contact_website') }}" target="_blank">{{ $s->get('contact_website') }}</a>
                     </div>
                 </div>
+                @endif
+
+                @if($s->get('contact_location'))
                 <div class="thr-info-card">
                     <div class="thr-info-card__icon"><i class="fas fa-map-marker-alt"></i></div>
                     <div>
                         <h4>Location</h4>
-                        <p>Accra, Ghana<br><small>(Full address provided at booking confirmation)</small></p>
+                        <p>{{ $s->get('contact_location') }}<br><small>(Full address provided at booking confirmation)</small></p>
                     </div>
                 </div>
+                @endif
+
+                @if($s->get('contact_hours'))
                 <div class="thr-info-card">
                     <div class="thr-info-card__icon"><i class="fas fa-clock"></i></div>
                     <div>
                         <h4>Business Hours</h4>
-                        <p>Mon – Fri: 8:00 AM – 7:00 PM<br>Saturday: 9:00 AM – 5:00 PM<br>Sunday: 10:00 AM – 3:00 PM</p>
+                        <p>{!! nl2br(e($s->get('contact_hours'))) !!}</p>
                     </div>
                 </div>
+                @endif
 
                 {{-- Social Media --}}
+                @php
+                    $socials = [
+                        ['handle' => $s->get('contact_ig_handle'), 'url' => $s->get('contact_ig_url'), 'icon' => 'fab fa-instagram', 'class' => 'thr-social-link--ig'],
+                        ['handle' => $s->get('contact_tt_handle'), 'url' => $s->get('contact_tt_url'), 'icon' => 'fab fa-tiktok',    'class' => 'thr-social-link--tt'],
+                        ['handle' => $s->get('contact_fb_handle'), 'url' => $s->get('contact_fb_url'), 'icon' => 'fab fa-facebook',  'class' => 'thr-social-link--fb'],
+                        ['handle' => $s->get('contact_sc_handle'), 'url' => $s->get('contact_sc_url'), 'icon' => 'fab fa-snapchat', 'class' => 'thr-social-link--sc'],
+                    ];
+                    $activeSocials = array_filter($socials, fn($s) => $s['handle'] || $s['url']);
+                @endphp
+                @if($activeSocials)
                 <div class="thr-social-links">
                     <h4>Follow Us</h4>
                     <div class="thr-social-links__grid">
-                        <a href="https://instagram.com/thehealing_room26" target="_blank" class="thr-social-link thr-social-link--ig">
-                            <i class="fab fa-instagram"></i>
-                            <span>@thehealing_room26</span>
+                        @foreach($activeSocials as $social)
+                        <a href="{{ $social['url'] ?? '#' }}" target="_blank" class="thr-social-link {{ $social['class'] }}">
+                            <i class="{{ $social['icon'] }}"></i>
+                            <span>{{ $social['handle'] ?? $social['url'] }}</span>
                         </a>
-                        <a href="https://tiktok.com/@thehealing_room26" target="_blank" class="thr-social-link thr-social-link--tt">
-                            <i class="fab fa-tiktok"></i>
-                            <span>@thehealing_room26</span>
-                        </a>
-                        <a href="https://facebook.com/thehealing_room" target="_blank" class="thr-social-link thr-social-link--fb">
-                            <i class="fab fa-facebook"></i>
-                            <span>@thehealing_room</span>
-                        </a>
-                        <a href="https://snapchat.com/add/thehealingroom2" target="_blank" class="thr-social-link thr-social-link--sc">
-                            <i class="fab fa-snapchat"></i>
-                            <span>@thehealingroom2</span>
-                        </a>
+                        @endforeach
                     </div>
                 </div>
+                @endif
             </div>
         </div>
 
-        {{-- Google Maps Placeholder --}}
+        {{-- Map --}}
+        @if($s->get('contact_map_embed'))
+        <div class="thr-map-embed" style="margin-top:2.5rem;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)">
+            {!! $s->get('contact_map_embed') !!}
+        </div>
+        @else
         <div class="thr-map-placeholder">
             <div class="thr-map-placeholder__inner">
                 <i class="fas fa-map-marked-alt"></i>
@@ -127,6 +155,7 @@
                 </a>
             </div>
         </div>
+        @endif
     </div>
 </section>
 

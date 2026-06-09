@@ -37,6 +37,11 @@
             <div class="thr-service-list">
                 @foreach($data['services'] as $service)
                 <div class="thr-service-item">
+                    @if($service->image)
+                    <div class="thr-service-item__image">
+                        <img src="{{ $service->image_url }}" alt="{{ $service->name }}">
+                    </div>
+                    @endif
                     <div class="thr-service-item__body">
                         <h3 class="thr-service-item__name">{{ $service->name }}</h3>
                         <p class="thr-service-item__desc">{{ $service->short_description }}</p>

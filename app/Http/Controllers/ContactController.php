@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\ContactMessage;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
     public function index()
     {
-        return view('contact');
+        $s = SiteSetting::forPage('contact_');
+        return view('contact', compact('s'));
     }
 
     public function send(Request $request)

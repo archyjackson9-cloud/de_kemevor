@@ -79,7 +79,13 @@
         <div class="thr-services-grid">
             @foreach($featuredServices as $service)
             <div class="thr-service-card thr-service-card--{{ $service->getCategoryColorAttribute() }}">
+                @if($service->image)
+                <div class="thr-service-card__img">
+                    <img src="{{ $service->image_url }}" alt="{{ $service->name }}">
+                </div>
+                @else
                 <div class="thr-service-card__icon">{{ \App\Models\Service::getCategoryIcon($service->category) }}</div>
+                @endif
                 <div class="thr-service-card__category">{{ $service->category_label }}</div>
                 <h3 class="thr-service-card__name">{{ $service->name }}</h3>
                 <p class="thr-service-card__desc">{{ $service->short_description }}</p>
@@ -160,6 +166,35 @@
         </div>
     </div>
 </section>
+
+{{-- ── PARTNERS ──────────────────────────────────────────────────────── --}}
+@if($partners->isNotEmpty())
+<section class="thr-section thr-section--partners">
+    <div class="thr-container">
+        <div class="thr-section-header">
+            <p class="thr-section-header__eyebrow">Trusted By</p>
+            <h2 class="thr-section-header__title">Our Partners</h2>
+        </div>
+        <div class="thr-partners-grid">
+            @foreach($partners as $partner)
+            <div class="thr-partner-item">
+                @if($partner->website_url)
+                <a href="{{ $partner->website_url }}" target="_blank" rel="noopener" title="{{ $partner->name }}">
+                @endif
+                    @if($partner->logo)
+                    <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" class="thr-partner-logo">
+                    @else
+                    <span class="thr-partner-name">{{ $partner->name }}</span>
+                    @endif
+                @if($partner->website_url)
+                </a>
+                @endif
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
 
 {{-- ── CTA BANNER ────────────────────────────────────────────────────── --}}
 <section class="thr-cta-banner">
