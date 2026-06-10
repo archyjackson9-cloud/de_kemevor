@@ -270,6 +270,8 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-serif); font-weight: 600; line-heigh
 .thr-social-link--tt { background: #000; }
 .thr-social-link--fb { background: #1877f2; }
 .thr-social-link--sc { background: #fffc00; color: #000 !important; }
+.thr-map-embed iframe { display: block; width: 100%; height: 450px; border: 0; }
+@media (max-width: 768px) { .thr-map-embed iframe { height: 320px; } }
 .thr-map-placeholder { background: var(--gold-bg); border: 2px dashed var(--border); border-radius: var(--radius); padding: 3rem; text-align: center; }
 .thr-map-placeholder__inner i { font-size: 3rem; color: var(--gold); margin-bottom: 1rem; display: block; }
 .thr-map-placeholder__inner h3 { font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: .5rem; }
