@@ -9,6 +9,7 @@ use App\Models\Service;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 use Database\Seeders\PageSettingsSeeder;
+use Database\Seeders\AdminUserSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -138,6 +139,9 @@ class DatabaseSeeder extends Seeder
 
         // ── Page Settings ─────────────────────────────────────────────
         $this->call(PageSettingsSeeder::class);
+
+        // ── Admin User ────────────────────────────────────────────────
+        $this->call(AdminUserSeeder::class);
 
         // ── Promo Codes ───────────────────────────────────────────────
         PromoCode::firstOrCreate(['code' => 'HEAL10'], [

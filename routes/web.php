@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 // ── Public Routes ──────────────────────────────────────────────────────────
@@ -36,6 +37,12 @@ Route::get('/book/promo',       [BookingController::class, 'checkPromo'])       
 Route::get('/admin/login',  [AuthController::class, 'loginForm'])->name('admin.login');
 Route::post('/admin/login', [AuthController::class, 'login'])    ->name('admin.login.post');
 Route::post('/admin/logout',[AuthController::class, 'logout'])   ->name('admin.logout');
+
+// Forgot / Reset Password
+Route::get('/admin/forgot-password',  [AuthController::class, 'forgotPasswordForm'])->name('admin.password.request');
+Route::post('/admin/forgot-password', [AuthController::class, 'sendResetCode'])     ->name('admin.password.email');
+Route::get('/admin/reset-password',   [AuthController::class, 'resetPasswordForm']) ->name('admin.password.reset.form');
+Route::post('/admin/reset-password',  [AuthController::class, 'resetPassword'])     ->name('admin.password.update');
 
 // ── Admin Protected Routes ─────────────────────────────────────────────────
 Route::middleware(\App\Http\Middleware\AdminAuthenticate::class)->prefix('admin')->group(function () {
@@ -108,4 +115,10 @@ Route::middleware(\App\Http\Middleware\AdminAuthenticate::class)->prefix('admin'
     // Pages — Contact
     Route::get('/pages/contact',  [PageController::class, 'contact'])       ->name('admin.pages.contact');
     Route::post('/pages/contact', [PageController::class, 'updateContact']) ->name('admin.pages.contact.update');
+
+    // Admin Users
+    Route::get('/users',           [UserController::class, 'index'])  ->name('admin.users');
+    Route::post('/users',          [UserController::class, 'store'])  ->name('admin.users.store');
+    Route::put('/users/{user}',    [UserController::class, 'update']) ->name('admin.users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 });

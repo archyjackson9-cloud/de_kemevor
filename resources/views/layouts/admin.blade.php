@@ -55,6 +55,9 @@
             <a href="{{ route('admin.pages.about') }}" class="admin-nav-item {{ request()->routeIs('admin.pages*') ? 'active' : '' }}">
                 <i class="fas fa-file-alt"></i> <span>Pages</span>
             </a>
+            <a href="{{ route('admin.users') }}" class="admin-nav-item {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+                <i class="fas fa-user-shield"></i> <span>Admin Users</span>
+            </a>
         </nav>
 
         <div class="admin-sidebar__footer">
@@ -79,7 +82,7 @@
             <div class="admin-header__title">@yield('page-title', 'Dashboard')</div>
             <div class="admin-header__meta">
                 <span class="admin-header__date"><i class="fas fa-calendar"></i> {{ now()->format('D, M j Y') }}</span>
-                <span class="admin-header__user"><i class="fas fa-user-circle"></i> Administrator</span>
+                <span class="admin-header__user"><i class="fas fa-user-circle"></i> {{ session('admin_name', 'Administrator') }}</span>
             </div>
         </header>
 
