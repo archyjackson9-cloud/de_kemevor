@@ -46,6 +46,9 @@
             <a href="{{ route('admin.reports') }}" class="admin-nav-item {{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
                 <i class="fas fa-chart-bar"></i> <span>Reports</span>
             </a>
+            <a href="{{ route('admin.consultations') }}" class="admin-nav-item {{ request()->routeIs('admin.consultations*') ? 'active' : '' }}">
+                <i class="fas fa-stethoscope"></i> <span>E-Consultations</span>
+            </a>
             <a href="{{ route('admin.team') }}" class="admin-nav-item {{ request()->routeIs('admin.team*') ? 'active' : '' }}">
                 <i class="fas fa-user-friends"></i> <span>Team Members</span>
             </a>

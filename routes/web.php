@@ -3,11 +3,13 @@
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\EConsultationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Http\Controllers\Admin\ConsultationController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\DiscountController;
@@ -25,6 +27,10 @@ Route::get('/services',[ServicesController::class, 'index'])->name('services');
 Route::get('/about',   [AboutController::class,    'index'])->name('about');
 Route::get('/contact', [ContactController::class,  'index'])->name('contact');
 Route::post('/contact',[ContactController::class,  'send'])->name('contact.send');
+
+// E-Consultation
+Route::get('/e-consultation',  [EConsultationController::class, 'index'])->name('econsultation');
+Route::post('/e-consultation', [EConsultationController::class, 'store'])->name('econsultation.store');
 
 // Booking
 Route::get('/book',             [BookingController::class, 'index'])  ->name('booking');
@@ -121,4 +127,10 @@ Route::middleware(\App\Http\Middleware\AdminAuthenticate::class)->prefix('admin'
     Route::post('/users',          [UserController::class, 'store'])  ->name('admin.users.store');
     Route::put('/users/{user}',    [UserController::class, 'update']) ->name('admin.users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+
+    // E-Consultations
+    Route::get('/consultations',                 [ConsultationController::class, 'index'])  ->name('admin.consultations');
+    Route::get('/consultations/{consultation}',  [ConsultationController::class, 'show'])   ->name('admin.consultations.show');
+    Route::post('/consultations/{consultation}/respond', [ConsultationController::class, 'respond'])->name('admin.consultations.respond');
+    Route::delete('/consultations/{consultation}', [ConsultationController::class, 'destroy'])->name('admin.consultations.destroy');
 });

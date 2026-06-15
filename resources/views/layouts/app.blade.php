@@ -35,6 +35,7 @@
             <li><a href="{{ route('services') }}" class="{{ request()->routeIs('services') ? 'active' : '' }}">Services</a></li>
             <li><a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}">About</a></li>
             <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}">Contact</a></li>
+            <li><a href="{{ route('econsultation') }}" class="{{ request()->routeIs('econsultation*') ? 'active' : '' }}">E-Consultation</a></li>
             <li><a href="{{ route('booking') }}" class="thr-nav__cta {{ request()->routeIs('booking*') ? 'active' : '' }}">Book Now</a></li>
         </ul>
     </div>
