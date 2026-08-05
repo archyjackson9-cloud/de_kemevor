@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+
+# Persist user-uploaded public files (storage/app/public) across deployments.
+# Each deploy lands in a fresh /webroot/release directory, so anything written
+# to storage/app/public there is lost (and isn't reliably writable) unless it
+# points at Amezmo's persistent storage directory instead.
+PERSISTENT_PUBLIC="${PERSISTENT_STORAGE_DIRECTORY:-/webroot/storage}/public"
+
+mkdir -p "$PERSISTENT_PUBLIC"
+
+rm -rf "${DEPLOYMENT_DIRECTORY}/storage/app/public"
+ln -s "$PERSISTENT_PUBLIC" "${DEPLOYMENT_DIRECTORY}/storage/app/public"
+
+# Point the public-facing symlink straight at persistent storage (replaces
+# `php artisan storage:link`, which would otherwise just point back into the
+# ephemeral release directory).
+ln --symbolic --force --no-dereference "$PERSISTENT_PUBLIC" "${DEPLOYMENT_DIRECTORY}/public/storage"
