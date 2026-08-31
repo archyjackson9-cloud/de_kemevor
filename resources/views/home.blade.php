@@ -4,32 +4,69 @@
 @section('content')
 
 {{-- ── HERO ──────────────────────────────────────────────────────────── --}}
-<section class="thr-hero">
-    <div class="thr-hero__overlay"></div>
-    <div class="thr-hero__content">
-        <p class="thr-hero__eyebrow">Advanced Aesthetic Clinic · Accra, Ghana</p>
-        <h1 class="thr-hero__headline">
-            Restore and Maintain<br>
-            <span class="thr-hero__headline--gold">Your Confidence</span>
-        </h1>
-        <p class="thr-hero__sub">
-            Premium wellness and aesthetic treatments tailored for your unique journey —<br>
-            from post-partum recovery to rejuvenation and beyond.
-        </p>
-        <div class="thr-hero__actions">
-            <a href="{{ route('booking') }}" class="btn btn-gold btn-lg">
-                <i class="fas fa-calendar-plus"></i> Book Your Session
-            </a>
-            <a href="{{ route('services') }}" class="btn btn-outline-light btn-lg">
-                <i class="fas fa-spa"></i> Explore Services
-            </a>
-        </div>
-        <div class="thr-hero__badges">
-            <span><i class="fas fa-shield-alt"></i> 100% Private & Confidential</span>
-            <span><i class="fas fa-award"></i> Expert-Led Treatments</span>
-            <span><i class="fas fa-heart"></i> Holistic Approach</span>
+@php
+$heroSlideList = $heroSlides->count() ? $heroSlides : collect([
+    (object) [
+        'image_url'  => 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=1600',
+        'eyebrow'    => 'Advanced Aesthetic Clinic · Accra, Ghana',
+        'title'      => 'Restore and Maintain',
+        'title_gold' => 'Your Confidence',
+        'subtitle'   => 'Premium wellness and aesthetic treatments tailored for your unique journey — from post-partum recovery to rejuvenation and beyond.',
+    ],
+]);
+@endphp
+<section class="thr-hero" id="heroSlider">
+    @foreach($heroSlideList as $i => $slide)
+    <div class="thr-hero__slide {{ $i === 0 ? 'is-active' : '' }}"
+         style="background-image: linear-gradient(160deg, rgba(26,18,8,.85) 0%, rgba(44,28,10,.7) 50%, rgba(200,151,43,.2) 100%), url('{{ $slide->image_url }}')">
+        <div class="thr-hero__content">
+            @if($slide->eyebrow)
+            <p class="thr-hero__eyebrow">{{ $slide->eyebrow }}</p>
+            @endif
+            @if($slide->title || $slide->title_gold)
+            <h1 class="thr-hero__headline">
+                {{ $slide->title }}
+                @if($slide->title_gold)
+                <span class="thr-hero__headline--gold">{{ $slide->title_gold }}</span>
+                @endif
+            </h1>
+            @endif
+            @if($slide->subtitle)
+            <p class="thr-hero__sub">{{ $slide->subtitle }}</p>
+            @endif
+            <div class="thr-hero__actions">
+                <a href="{{ route('booking') }}" class="btn btn-gold btn-lg">
+                    <i class="fas fa-calendar-plus"></i> Book Your Session
+                </a>
+                <a href="{{ route('services') }}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-spa"></i> Explore Services
+                </a>
+            </div>
+            <div class="thr-hero__badges">
+                <span><i class="fas fa-shield-alt"></i> 100% Private & Confidential</span>
+                <span><i class="fas fa-award"></i> Expert-Led Treatments</span>
+                <span><i class="fas fa-heart"></i> Holistic Approach</span>
+            </div>
         </div>
     </div>
+    @endforeach
+
+    <div class="thr-hero__overlay"></div>
+
+    @if($heroSlideList->count() > 1)
+    <button type="button" class="thr-hero__arrow thr-hero__arrow--prev" data-hero-prev aria-label="Previous slide">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button type="button" class="thr-hero__arrow thr-hero__arrow--next" data-hero-next aria-label="Next slide">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+    <div class="thr-hero__dots">
+        @foreach($heroSlideList as $i => $slide)
+        <button type="button" class="thr-hero__dot {{ $i === 0 ? 'is-active' : '' }}" data-hero-dot="{{ $i }}" aria-label="Go to slide {{ $i + 1 }}"></button>
+        @endforeach
+    </div>
+    @endif
+
     <div class="thr-hero__scroll">
         <span>Scroll to explore</span>
         <i class="fas fa-chevron-down"></i>
@@ -211,3 +248,44 @@
 </section>
 
 @endsection
+
+@push('scripts')
+<script>
+(function () {
+    const hero = document.getElementById('heroSlider');
+    if (!hero) return;
+
+    const slides = hero.querySelectorAll('.thr-hero__slide');
+    const dots   = hero.querySelectorAll('[data-hero-dot]');
+    if (slides.length < 2) return;
+
+    let current = 0;
+    let timer;
+
+    function goTo(index) {
+        slides[current].classList.remove('is-active');
+        dots[current]?.classList.remove('is-active');
+        current = (index + slides.length) % slides.length;
+        slides[current].classList.add('is-active');
+        dots[current]?.classList.add('is-active');
+    }
+
+    function start() {
+        timer = setInterval(() => goTo(current + 1), 6000);
+    }
+
+    function stop() {
+        clearInterval(timer);
+    }
+
+    hero.querySelector('[data-hero-prev]')?.addEventListener('click', () => { goTo(current - 1); stop(); start(); });
+    hero.querySelector('[data-hero-next]')?.addEventListener('click', () => { goTo(current + 1); stop(); start(); });
+    dots.forEach(dot => dot.addEventListener('click', () => { goTo(Number(dot.dataset.heroDot)); stop(); start(); }));
+
+    hero.addEventListener('mouseenter', stop);
+    hero.addEventListener('mouseleave', start);
+
+    start();
+})();
+</script>
+@endpush

@@ -140,6 +140,9 @@ class DatabaseSeeder extends Seeder
         // ── Page Settings ─────────────────────────────────────────────
         $this->call(PageSettingsSeeder::class);
 
+        // ── Hero Slides ───────────────────────────────────────────────
+        $this->call(HeroSlideSeeder::class);
+
         // ── Admin User ────────────────────────────────────────────────
         $this->call(AdminUserSeeder::class);
 

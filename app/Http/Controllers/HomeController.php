@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HeroSlide;
 use App\Models\Partner;
 use App\Models\Service;
 
@@ -19,6 +20,11 @@ class HomeController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('home', compact('featuredServices', 'partners'));
+        $heroSlides = HeroSlide::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        return view('home', compact('featuredServices', 'partners', 'heroSlides'));
     }
 }

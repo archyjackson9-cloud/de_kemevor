@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\ReminderController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\PartnerController;
+use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -105,6 +106,13 @@ Route::middleware(\App\Http\Middleware\AdminAuthenticate::class)->prefix('admin'
     Route::put('/partners/{partner}',         [PartnerController::class, 'update'])      ->name('admin.partners.update');
     Route::delete('/partners/{partner}',      [PartnerController::class, 'destroy'])     ->name('admin.partners.destroy');
     Route::post('/partners/{partner}/toggle', [PartnerController::class, 'toggleActive'])->name('admin.partners.toggle');
+
+    // Hero Slides
+    Route::get('/hero-slides',                    [HeroSlideController::class, 'index'])       ->name('admin.hero-slides');
+    Route::post('/hero-slides',                   [HeroSlideController::class, 'store'])       ->name('admin.hero-slides.store');
+    Route::put('/hero-slides/{heroSlide}',         [HeroSlideController::class, 'update'])      ->name('admin.hero-slides.update');
+    Route::delete('/hero-slides/{heroSlide}',      [HeroSlideController::class, 'destroy'])     ->name('admin.hero-slides.destroy');
+    Route::post('/hero-slides/{heroSlide}/toggle', [HeroSlideController::class, 'toggleActive'])->name('admin.hero-slides.toggle');
 
     // Pages — About
     Route::get('/pages/about',    [PageController::class, 'about'])      ->name('admin.pages.about');

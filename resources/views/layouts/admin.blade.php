@@ -55,6 +55,9 @@
             <a href="{{ route('admin.partners') }}" class="admin-nav-item {{ request()->routeIs('admin.partners*') ? 'active' : '' }}">
                 <i class="fas fa-handshake"></i> <span>Partners</span>
             </a>
+            <a href="{{ route('admin.hero-slides') }}" class="admin-nav-item {{ request()->routeIs('admin.hero-slides*') ? 'active' : '' }}">
+                <i class="fas fa-images"></i> <span>Hero Slider</span>
+            </a>
             <a href="{{ route('admin.pages.about') }}" class="admin-nav-item {{ request()->routeIs('admin.pages*') ? 'active' : '' }}">
                 <i class="fas fa-file-alt"></i> <span>Pages</span>
             </a>
