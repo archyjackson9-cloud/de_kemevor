@@ -5,7 +5,8 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     env_file:
-      - .env
+      - path: .env
+        required: false
     volumes:
       - laravel_storage:/var/www/storage
 
