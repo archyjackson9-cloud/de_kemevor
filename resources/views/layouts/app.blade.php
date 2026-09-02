@@ -68,14 +68,14 @@
                     <span>🌿</span>
                     <div>
                         <div class="thr-footer__logo-main">The Healing Room</div>
-                        <div class="thr-footer__logo-sub">Aesthetic Clinic</div>
+                        <div class="thr-footer__logo-sub">Esthetic Clinic</div>
                     </div>
                 </div>
                 <p class="thr-footer__tagline">Restore and Maintain Your Confidence.</p>
                 <div class="thr-footer__social">
-                    <a href="https://instagram.com/thehealing_room26" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://tiktok.com/@thehealing_room26" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
-                    <a href="https://facebook.com/thehealing_room" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/thehealing_room26?igsh=M3dodGxxYjFybzRi" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://vm.tiktok.com/ZS9ktYUVHgLrB-jCW5R/" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=61578467157568" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
                     <a href="https://snapchat.com/add/thehealingroom2" target="_blank" title="Snapchat"><i class="fab fa-snapchat"></i></a>
                 </div>
             </div>
@@ -88,6 +88,7 @@
                     <li><a href="{{ route('about') }}">About Us</a></li>
                     <li><a href="{{ route('booking') }}">Book Appointment</a></li>
                     <li><a href="{{ route('contact') }}">Contact</a></li>
+                    <li><a href="{{ route('econsultation') }}">E-Consultation</a></li>
                 </ul>
             </div>
 
@@ -105,15 +106,15 @@
                 <h4>Contact Us</h4>
                 <ul class="thr-footer__contact">
                     <li><i class="fas fa-phone"></i> <a href="tel:0597173323">0597173323</a></li>
-                    <li><i class="fas fa-envelope"></i> <a href="mailto:hello@thehealingroom.com">hello@thehealingroom.com</a></li>
-                    <li><i class="fas fa-globe"></i> <a href="https://www.thehealingroom.com">www.thehealingroom.com</a></li>
-                    <li><i class="fas fa-map-marker-alt"></i> Accra, Ghana</li>
+                    <li><i class="fas fa-envelope"></i> <a href="mailto:info@thehealingrooms1.com">info@thehealingrooms1.com</a></li>
+                    <li><i class="fas fa-globe"></i> <a href="https://www.thehealingrooms1.com">www.thehealingrooms1.com</a></li>
+                    <li><i class="fas fa-map-marker-alt"></i> Lashibi, Ghana</li>
                 </ul>
                 <div class="thr-footer__hours">
                     <h5>Business Hours</h5>
                     <p>Mon – Fri: 8:00 AM – 7:00 PM</p>
                     <p>Saturday: 9:00 AM – 5:00 PM</p>
-                    <p>Sunday: 10:00 AM – 3:00 PM</p>
+                    
                 </div>
             </div>
         </div>
