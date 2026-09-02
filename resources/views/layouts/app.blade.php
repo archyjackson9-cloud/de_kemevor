@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="The Healing Room – Advanced Aesthetic Clinic. Restore and Maintain Your Confidence. Premium wellness & aesthetic treatments in Ghana.">
+    <meta name="description" content="The Healing Room – Advanced Esthetic Clinic. Restore and Maintain Your Confidence. Premium wellness & aesthetic treatments in Ghana.">
     <title>@yield('title', 'The Healing Room | Aesthetic Clinic')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +22,7 @@
             <span class="thr-nav__brand-icon">🌿</span>
             <span class="thr-nav__brand-text">
                 <span class="thr-nav__brand-main">The Healing Room</span>
-                <span class="thr-nav__brand-sub">Aesthetic Clinic</span>
+                <span class="thr-nav__brand-sub">Esthetic Clinic</span>
             </span>
         </a>
 
@@ -120,7 +120,7 @@
         </div>
 
         <div class="thr-footer__bottom">
-            <p>&copy; {{ date('Y') }} The Healing Room Aesthetic Clinic. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} The Healing Room Esthetic Clinic. All rights reserved.</p>
             <p>Made with <span style="color:#c8972b">♥</span> in Ghana</p>
         </div>
     </div>
