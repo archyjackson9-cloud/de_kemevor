@@ -188,7 +188,7 @@
                     </td>
                     <td class="admin-table__actions">
                         <button class="btn btn-xs btn-outline"
-                            onclick="editValue({{ $v->id }},'{{ addslashes($v->number) }}','{{ addslashes($v->title) }}','{{ addslashes($v->body) }}',{{ $v->sort_order }})">
+                            onclick="editValue({{ $v->id }},'{{ addslashes($v->number) }}','{{ addslashes($v->title) }}','{{ addslashes($v->body) }}',{{ $v->sort_order ?? 0 }})">
                             <i class="fas fa-edit"></i>
                         </button>
                         <form method="POST" action="{{ route('admin.pages.about.values.destroy', $v->id) }}" style="display:inline"
@@ -234,7 +234,7 @@
                     </td>
                     <td class="admin-table__actions">
                         <button class="btn btn-xs btn-outline"
-                            onclick="editCert({{ $c->id }},'{{ addslashes($c->icon) }}','{{ addslashes($c->label) }}',{{ $c->sort_order }})">
+                            onclick="editCert({{ $c->id }},'{{ addslashes($c->icon) }}','{{ addslashes($c->label) }}',{{ $c->sort_order ?? 0 }})">
                             <i class="fas fa-edit"></i>
                         </button>
                         <form method="POST" action="{{ route('admin.pages.about.certs.destroy', $c->id) }}" style="display:inline"

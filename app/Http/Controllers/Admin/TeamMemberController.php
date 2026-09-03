@@ -26,6 +26,7 @@ class TeamMemberController extends Controller
         ]);
 
         $validated['is_active'] = true;
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('team', 'public');
@@ -46,6 +47,8 @@ class TeamMemberController extends Controller
             'image'        => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'remove_image' => 'nullable|boolean',
         ]);
+
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
 
         if ($request->hasFile('image')) {
             if ($team->image) Storage::disk('public')->delete($team->image);

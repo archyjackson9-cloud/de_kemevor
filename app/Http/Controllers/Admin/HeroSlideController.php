@@ -27,6 +27,7 @@ class HeroSlideController extends Controller
         ]);
 
         $validated['is_active'] = true;
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
         $validated['image'] = $request->file('image')->store('hero', 'public');
 
         HeroSlide::create($validated);
@@ -44,6 +45,8 @@ class HeroSlideController extends Controller
             'sort_order' => 'nullable|integer',
             'image'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
         ]);
+
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
 
         if ($request->hasFile('image')) {
             if ($heroSlide->image) Storage::disk('public')->delete($heroSlide->image);

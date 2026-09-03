@@ -30,6 +30,7 @@ class ServiceController extends Controller
 
         $validated['slug']      = Str::slug($validated['name']);
         $validated['is_active'] = true;
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('services', 'public');
@@ -55,6 +56,10 @@ class ServiceController extends Controller
 
         if (isset($validated['name'])) {
             $validated['slug'] = Str::slug($validated['name']);
+        }
+
+        if (array_key_exists('sort_order', $validated)) {
+            $validated['sort_order'] = $validated['sort_order'] ?? 0;
         }
 
         if ($request->hasFile('image')) {

@@ -105,7 +105,9 @@ class PageController extends Controller
             'sort_order' => 'nullable|integer',
         ]);
 
-        $aboutValue->update($request->only('number', 'title', 'body', 'sort_order'));
+        $data = $request->only('number', 'title', 'body', 'sort_order');
+        $data['sort_order'] = $data['sort_order'] ?? 0;
+        $aboutValue->update($data);
 
         return redirect()->route('admin.pages.about')->with('success', 'Core value updated.');
     }
@@ -150,7 +152,9 @@ class PageController extends Controller
             'sort_order' => 'nullable|integer',
         ]);
 
-        $aboutCertification->update($request->only('icon', 'label', 'sort_order'));
+        $data = $request->only('icon', 'label', 'sort_order');
+        $data['sort_order'] = $data['sort_order'] ?? 0;
+        $aboutCertification->update($data);
 
         return redirect()->route('admin.pages.about')->with('success', 'Certification updated.');
     }

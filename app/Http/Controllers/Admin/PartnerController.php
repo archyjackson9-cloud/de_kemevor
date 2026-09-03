@@ -25,6 +25,7 @@ class PartnerController extends Controller
         ]);
 
         $validated['is_active'] = true;
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
 
         if ($request->hasFile('logo')) {
             $validated['logo'] = $request->file('logo')->store('partners', 'public');
@@ -44,6 +45,8 @@ class PartnerController extends Controller
             'logo'         => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
             'remove_logo'  => 'nullable|boolean',
         ]);
+
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
 
         if ($request->hasFile('logo')) {
             if ($partner->logo) Storage::disk('public')->delete($partner->logo);

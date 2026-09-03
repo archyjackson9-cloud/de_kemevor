@@ -54,7 +54,7 @@
                     </td>
                     <td class="admin-table__actions">
                         <button class="btn btn-xs btn-outline"
-                            onclick="editPartner({{ $p->id }}, '{{ addslashes($p->name) }}', '{{ addslashes($p->website_url ?? '') }}', {{ $p->sort_order }}, '{{ $p->logo ? $p->logo_url : '' }}')">
+                            onclick="editPartner({{ $p->id }}, '{{ addslashes($p->name) }}', '{{ addslashes($p->website_url ?? '') }}', {{ $p->sort_order ?? 0 }}, '{{ $p->logo ? $p->logo_url : '' }}')">
                             <i class="fas fa-edit"></i>
                         </button>
                         <form method="POST" action="{{ route('admin.partners.destroy', $p->id) }}" style="display:inline"

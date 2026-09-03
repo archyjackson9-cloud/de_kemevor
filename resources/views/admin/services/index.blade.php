@@ -56,7 +56,7 @@
                     </td>
                     <td class="admin-table__actions">
                         <button class="btn btn-xs btn-outline"
-                            onclick="editService({{ $s->id }}, '{{ addslashes($s->name) }}', '{{ $s->category }}', '{{ addslashes($s->short_description) }}', '{{ $s->duration }}', {{ $s->price_from }}, {{ $s->sort_order }}, '{{ $s->image ? $s->image_url : '' }}')">
+                            onclick="editService({{ $s->id }}, '{{ addslashes($s->name) }}', '{{ $s->category }}', '{{ addslashes($s->short_description) }}', '{{ $s->duration }}', {{ $s->price_from }}, {{ $s->sort_order ?? 0 }}, '{{ $s->image ? $s->image_url : '' }}')">
                             <i class="fas fa-edit"></i>
                         </button>
                         <form method="POST" action="{{ route('admin.services.destroy', $s->id) }}" style="display:inline"

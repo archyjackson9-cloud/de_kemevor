@@ -45,7 +45,7 @@
                     </td>
                     <td class="admin-table__actions">
                         <button class="btn btn-xs btn-outline"
-                            onclick="editMember({{ $m->id }}, '{{ addslashes($m->name) }}', '{{ addslashes($m->role) }}', '{{ addslashes($m->bio ?? '') }}', {{ $m->sort_order }}, '{{ $m->image ? $m->image_url : '' }}')">
+                            onclick="editMember({{ $m->id }}, '{{ addslashes($m->name) }}', '{{ addslashes($m->role) }}', '{{ addslashes($m->bio ?? '') }}', {{ $m->sort_order ?? 0 }}, '{{ $m->image ? $m->image_url : '' }}')">
                             <i class="fas fa-edit"></i>
                         </button>
                         <form method="POST" action="{{ route('admin.team.destroy', $m->id) }}" style="display:inline"

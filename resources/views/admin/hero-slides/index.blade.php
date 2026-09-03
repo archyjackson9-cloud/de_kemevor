@@ -43,7 +43,7 @@
                     </td>
                     <td class="admin-table__actions">
                         <button class="btn btn-xs btn-outline"
-                            onclick="editSlide({{ $s->id }}, '{{ addslashes($s->eyebrow ?? '') }}', '{{ addslashes($s->title ?? '') }}', '{{ addslashes($s->title_gold ?? '') }}', '{{ addslashes($s->subtitle ?? '') }}', {{ $s->sort_order }}, '{{ $s->image_url }}')">
+                            onclick="editSlide({{ $s->id }}, '{{ addslashes($s->eyebrow ?? '') }}', '{{ addslashes($s->title ?? '') }}', '{{ addslashes($s->title_gold ?? '') }}', '{{ addslashes($s->subtitle ?? '') }}', {{ $s->sort_order ?? 0 }}, '{{ $s->image_url }}')">
                             <i class="fas fa-edit"></i>
                         </button>
                         <form method="POST" action="{{ route('admin.hero-slides.destroy', $s->id) }}" style="display:inline"
