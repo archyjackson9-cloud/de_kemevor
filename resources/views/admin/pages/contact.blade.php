@@ -5,6 +5,9 @@
 @section('content')
 
 <div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+    <a href="{{ route('admin.pages.home') }}" class="btn btn-outline btn-sm">
+        <i class="fas fa-house"></i> Home Page
+    </a>
     <a href="{{ route('admin.pages.about') }}" class="btn btn-outline btn-sm">
         <i class="fas fa-info-circle"></i> About Page
     </a>

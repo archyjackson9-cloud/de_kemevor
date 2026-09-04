@@ -26,6 +26,14 @@
             </thead>
             <tbody>
                 @foreach($services as $s)
+                @php
+                    $editPayload = \Illuminate\Support\Arr::only($s->toArray(), [
+                        'id', 'name', 'category', 'short_description', 'description',
+                        'meta_title', 'meta_description', 'duration', 'price_from', 'sort_order',
+                    ]);
+                    $editPayload['image_url'] = $s->image ? $s->image_url : '';
+                    $editPayloadJson = json_encode($editPayload);
+                @endphp
                 <tr>
                     <td>{{ $s->sort_order }}</td>
                     <td>
@@ -55,8 +63,14 @@
                         </form>
                     </td>
                     <td class="admin-table__actions">
-                        <button class="btn btn-xs btn-outline"
-                            onclick="editService({{ $s->id }}, '{{ addslashes($s->name) }}', '{{ $s->category }}', '{{ addslashes($s->short_description) }}', '{{ $s->duration }}', {{ $s->price_from }}, {{ $s->sort_order ?? 0 }}, '{{ $s->image ? $s->image_url : '' }}')">
+                        @if($s->is_active)
+                        <a href="{{ route('services.show', $s->slug) }}" target="_blank" class="btn btn-xs btn-outline" title="View live page">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        @endif
+                        <button type="button" class="btn btn-xs btn-outline"
+                            data-service='{{ $editPayloadJson }}'
+                            onclick="editService(this)">
                             <i class="fas fa-edit"></i>
                         </button>
                         <form method="POST" action="{{ route('admin.services.destroy', $s->id) }}" style="display:inline"
@@ -95,12 +109,17 @@
                         <option value="body_treatments">Body Treatments</option>
                         <option value="skin_treatments">Skin Treatments</option>
                         <option value="rejuvenation">Rejuvenation</option>
+                        <option value="body_enhancement">Body Enhancement</option>
                     </select>
                 </div>
             </div>
             <div class="thr-form__group">
                 <label>Short Description <span class="req">*</span></label>
-                <textarea name="short_description" rows="2" required placeholder="2 sentences describing the service…"></textarea>
+                <textarea name="short_description" rows="2" required placeholder="1-2 sentences — used on listing cards and as the SEO fallback description…" maxlength="300"></textarea>
+            </div>
+            <div class="thr-form__group">
+                <label>Full Article <span style="font-size:12px;color:#888">(shown on the service's own page — explain why clients should book this treatment at The Healing Room. Separate paragraphs with a blank line.)</span></label>
+                <textarea name="description" rows="6" placeholder="Write 2-4 paragraphs about this treatment: what it addresses, what to expect, and why The Healing Room…" maxlength="4000"></textarea>
             </div>
             <div class="thr-form__row">
                 <div class="thr-form__group">
@@ -117,9 +136,20 @@
                 </div>
             </div>
             <div class="thr-form__group">
-                <label>Service Image <span style="font-size:12px;color:#888">(JPEG/PNG/WebP, max 2MB)</span></label>
+                <label>Service Image <span style="font-size:12px;color:#888">(JPEG/PNG/WebP, max 2MB — used as the page's hero banner)</span></label>
                 <input type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/webp" class="admin-file-input">
             </div>
+            <fieldset style="border:1px dashed #d1d5db;border-radius:8px;padding:1rem;margin-top:1rem">
+                <legend style="font-size:.8rem;color:#888;padding:0 .5rem">SEO (optional — falls back to name / short description)</legend>
+                <div class="thr-form__group">
+                    <label>Meta Title <span style="font-size:12px;color:#888">(max 160 chars)</span></label>
+                    <input type="text" name="meta_title" maxlength="160" placeholder="e.g. Non-Invasive Lipo 380 in Accra | The Healing Room">
+                </div>
+                <div class="thr-form__group">
+                    <label>Meta Description <span style="font-size:12px;color:#888">(max 300 chars)</span></label>
+                    <textarea name="meta_description" rows="2" maxlength="300" placeholder="Shown in Google search results…"></textarea>
+                </div>
+            </fieldset>
             <div style="display:flex;gap:1rem;justify-content:flex-end;margin-top:1rem">
                 <button type="button" class="btn btn-outline" onclick="document.getElementById('addServiceModal').style.display='none'">Cancel</button>
                 <button type="submit" class="btn btn-gold">Add Service</button>
@@ -149,12 +179,17 @@
                         <option value="body_treatments">Body Treatments</option>
                         <option value="skin_treatments">Skin Treatments</option>
                         <option value="rejuvenation">Rejuvenation</option>
+                        <option value="body_enhancement">Body Enhancement</option>
                     </select>
                 </div>
             </div>
             <div class="thr-form__group">
                 <label>Short Description</label>
-                <textarea name="short_description" id="editDesc" rows="2"></textarea>
+                <textarea name="short_description" id="editDesc" rows="2" maxlength="300"></textarea>
+            </div>
+            <div class="thr-form__group">
+                <label>Full Article <span style="font-size:12px;color:#888">(shown on the service's own page. Separate paragraphs with a blank line.)</span></label>
+                <textarea name="description" id="editArticle" rows="6" maxlength="4000"></textarea>
             </div>
             <div class="thr-form__row">
                 <div class="thr-form__group">
@@ -181,6 +216,17 @@
                 <input type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/webp" class="admin-file-input">
                 <span style="font-size:12px;color:#888">Upload a new image to replace the current one.</span>
             </div>
+            <fieldset style="border:1px dashed #d1d5db;border-radius:8px;padding:1rem;margin-top:1rem">
+                <legend style="font-size:.8rem;color:#888;padding:0 .5rem">SEO (optional — falls back to name / short description)</legend>
+                <div class="thr-form__group">
+                    <label>Meta Title <span style="font-size:12px;color:#888">(max 160 chars)</span></label>
+                    <input type="text" name="meta_title" id="editMetaTitle" maxlength="160">
+                </div>
+                <div class="thr-form__group">
+                    <label>Meta Description <span style="font-size:12px;color:#888">(max 300 chars)</span></label>
+                    <textarea name="meta_description" id="editMetaDesc" rows="2" maxlength="300"></textarea>
+                </div>
+            </fieldset>
             <div style="display:flex;gap:1rem;justify-content:flex-end;margin-top:1rem">
                 <button type="button" class="btn btn-outline" onclick="document.getElementById('editServiceModal').style.display='none'">Cancel</button>
                 <button type="submit" class="btn btn-gold">Save Changes</button>
@@ -193,19 +239,24 @@
 
 @push('scripts')
 <script>
-function editService(id, name, category, desc, duration, price, sort, imageUrl) {
-    document.getElementById('editServiceForm').action = `/admin/services/${id}`;
-    document.getElementById('editName').value     = name;
-    document.getElementById('editCategory').value = category;
-    document.getElementById('editDesc').value     = desc;
-    document.getElementById('editDuration').value = duration;
-    document.getElementById('editPrice').value    = price;
-    document.getElementById('editSort').value     = sort;
+function editService(btn) {
+    const s = JSON.parse(btn.dataset.service);
+
+    document.getElementById('editServiceForm').action = `/admin/services/${s.id}`;
+    document.getElementById('editName').value        = s.name ?? '';
+    document.getElementById('editCategory').value     = s.category ?? '';
+    document.getElementById('editDesc').value         = s.short_description ?? '';
+    document.getElementById('editArticle').value      = s.description ?? '';
+    document.getElementById('editDuration').value     = s.duration ?? '';
+    document.getElementById('editPrice').value        = s.price_from ?? '';
+    document.getElementById('editSort').value         = s.sort_order ?? 0;
+    document.getElementById('editMetaTitle').value    = s.meta_title ?? '';
+    document.getElementById('editMetaDesc').value     = s.meta_description ?? '';
 
     const imgWrap = document.getElementById('editCurrentImage');
     const imgEl   = document.getElementById('editImagePreview');
-    if (imageUrl) {
-        imgEl.src = imageUrl;
+    if (s.image_url) {
+        imgEl.src = s.image_url;
         imgWrap.style.display = 'block';
     } else {
         imgWrap.style.display = 'none';

@@ -4,7 +4,7 @@
 @section('content')
 
 {{-- ── PAGE HERO ────────────────────────────────────────────────────── --}}
-<section class="thr-page-hero"
+<section class="thr-page-hero thr-page-hero--about"
     @if($s->get('about_hero_type') === 'image' && $s->get('about_hero_media'))
         style="background-image:url('{{ asset('storage/'.$s->get('about_hero_media')) }}');background-size:cover;background-position:center;"
     @endif

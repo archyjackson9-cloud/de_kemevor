@@ -12,10 +12,33 @@ class BookingController extends Controller
 {
     public function index(Request $request)
     {
+        $categories = [
+            'maternity_postop' => ['label' => 'Maternity & Post-Op Care', 'icon' => '🤱', 'color' => 'pink'],
+            'body_treatments'  => ['label' => 'Body Treatments',          'icon' => '💆', 'color' => 'teal'],
+            'skin_treatments'  => ['label' => 'Skin Treatments',          'icon' => '✨', 'color' => 'amber'],
+            'rejuvenation'     => ['label' => 'Rejuvenation',             'icon' => '🌸', 'color' => 'purple'],
+            'body_enhancement' => ['label' => 'Body Enhancement',         'icon' => '💪', 'color' => 'green'],
+        ];
+
         $services = Service::where('is_active', true)->orderBy('sort_order')->get();
+        $grouped  = $services->groupBy('category');
+
+        $servicesByCategory = [];
+        foreach ($categories as $key => $meta) {
+            if (empty($grouped[$key]) || $grouped[$key]->isEmpty()) continue;
+
+            $coverService = $grouped[$key]->first(fn ($s) => (bool) $s->image);
+
+            $servicesByCategory[$key] = [
+                'meta'     => $meta,
+                'services' => $grouped[$key],
+                'cover'    => $coverService?->image_url,
+            ];
+        }
+
         $preselectedService = $request->query('service');
 
-        return view('booking.index', compact('services', 'preselectedService'));
+        return view('booking.index', compact('services', 'servicesByCategory', 'preselectedService'));
     }
 
     public function store(Request $request)
@@ -104,8 +127,8 @@ class BookingController extends Controller
         $customer->increment('total_bookings');
         $customer->increment('loyalty_points', 100);
 
-        // Auto-upgrade to loyal tier if 5+ bookings
-        if ($customer->total_bookings >= 5 && $customer->discount_tier !== 'special') {
+        // Auto-upgrade to loyal tier once the configured booking threshold is reached
+        if ($customer->total_bookings >= Customer::loyalMinBookings() && $customer->discount_tier !== 'special') {
             $customer->update(['discount_tier' => 'loyal']);
         }
 

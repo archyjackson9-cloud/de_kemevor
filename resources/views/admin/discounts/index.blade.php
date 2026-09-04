@@ -9,7 +9,7 @@
     <div class="admin-kpi-card admin-kpi-card--blue">
         <div class="admin-kpi-card__icon"><i class="fas fa-user-plus"></i></div>
         <div class="admin-kpi-card__body">
-            <div class="admin-kpi-card__value">10%</div>
+            <div class="admin-kpi-card__value">{{ $tiers['new_client_pct'] }}%</div>
             <div class="admin-kpi-card__label">New Client Discount</div>
             <div style="font-size:12px;opacity:.7">Auto-applied on first booking</div>
         </div>
@@ -17,9 +17,9 @@
     <div class="admin-kpi-card admin-kpi-card--green">
         <div class="admin-kpi-card__icon"><i class="fas fa-star"></i></div>
         <div class="admin-kpi-card__body">
-            <div class="admin-kpi-card__value">15%</div>
+            <div class="admin-kpi-card__value">{{ $tiers['loyal_pct'] }}%</div>
             <div class="admin-kpi-card__label">Loyal Client Discount</div>
-            <div style="font-size:12px;opacity:.7">Unlocked after 5+ visits</div>
+            <div style="font-size:12px;opacity:.7">Unlocked after {{ $tiers['loyal_min_bookings'] }}+ visits</div>
         </div>
     </div>
     <div class="admin-kpi-card admin-kpi-card--gold">
@@ -37,6 +37,33 @@
             <div class="admin-kpi-card__label">Active Promo Codes</div>
         </div>
     </div>
+</div>
+
+{{-- Automatic Discount Tiers --}}
+<div class="admin-card">
+    <div class="admin-card__header"><h3><i class="fas fa-sliders-h"></i> Automatic Discount Tiers</h3></div>
+    <form method="POST" action="{{ route('admin.discounts.tiers.update') }}" class="thr-form">
+        @csrf
+        <div class="thr-form__row">
+            <div class="thr-form__group">
+                <label>New Client Discount % <span class="req">*</span></label>
+                <input type="number" name="new_client_pct" min="0" max="100" required value="{{ old('new_client_pct', $tiers['new_client_pct']) }}">
+                <span style="font-size:12px;color:#888">Auto-applied on a customer's first booking.</span>
+            </div>
+            <div class="thr-form__group">
+                <label>Loyal Client Discount % <span class="req">*</span></label>
+                <input type="number" name="loyal_pct" min="0" max="100" required value="{{ old('loyal_pct', $tiers['loyal_pct']) }}">
+                <span style="font-size:12px;color:#888">Auto-applied once the visit threshold below is reached.</span>
+            </div>
+            <div class="thr-form__group">
+                <label>Loyal Threshold (visits) <span class="req">*</span></label>
+                <input type="number" name="loyal_min_bookings" min="1" max="100" required value="{{ old('loyal_min_bookings', $tiers['loyal_min_bookings']) }}">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-gold btn-sm">
+            <i class="fas fa-check"></i> Save Tiers
+        </button>
+    </form>
 </div>
 
 <div class="admin-two-col">

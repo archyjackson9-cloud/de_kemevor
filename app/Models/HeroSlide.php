@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class HeroSlide extends Model
 {
     protected $fillable = [
-        'image', 'eyebrow', 'title', 'title_gold', 'subtitle', 'sort_order', 'is_active',
+        'image', 'video', 'eyebrow', 'title', 'title_gold', 'subtitle', 'sort_order', 'is_active',
     ];
 
     public function getImageUrlAttribute(): string
@@ -17,5 +17,19 @@ class HeroSlide extends Model
         return str_starts_with($this->image, 'http')
             ? $this->image
             : asset('storage/' . $this->image);
+    }
+
+    public function getVideoUrlAttribute(): ?string
+    {
+        if (!$this->video) return null;
+
+        return str_starts_with($this->video, 'http')
+            ? $this->video
+            : asset('storage/' . $this->video);
+    }
+
+    public function getHasVideoAttribute(): bool
+    {
+        return (bool) $this->video;
     }
 }

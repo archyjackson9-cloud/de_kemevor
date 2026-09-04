@@ -37,6 +37,21 @@ class Customer extends Model
         return "{$this->first_name} {$this->last_name}";
     }
 
+    public static function loyalMinBookings(): int
+    {
+        return (int) SiteSetting::get('discount_loyal_min_bookings', 5);
+    }
+
+    public static function loyalDiscountPct(): int
+    {
+        return (int) SiteSetting::get('discount_loyal_pct', 15);
+    }
+
+    public static function newClientDiscountPct(): int
+    {
+        return (int) SiteSetting::get('discount_new_client_pct', 10);
+    }
+
     public function getActiveDiscountAttribute(): ?CustomerDiscount
     {
         return $this->discounts()
@@ -51,9 +66,9 @@ class Customer extends Model
 
     public function getApplicableDiscountPercentage(): int
     {
-        // Auto-upgrade to loyal after 5 bookings
-        if ($this->total_bookings >= 5 && $this->discount_tier !== 'special') {
-            return 15;
+        // Auto-upgrade to loyal after the configured number of bookings
+        if ($this->total_bookings >= static::loyalMinBookings() && $this->discount_tier !== 'special') {
+            return static::loyalDiscountPct();
         }
 
         $active = $this->activeDiscount;
@@ -62,7 +77,7 @@ class Customer extends Model
         }
 
         if ($this->discount_tier === 'new_client' && $this->total_bookings === 0) {
-            return 10;
+            return static::newClientDiscountPct();
         }
 
         return 0;
@@ -70,8 +85,8 @@ class Customer extends Model
 
     public function getDiscountLabelAttribute(): string
     {
-        if ($this->total_bookings >= 5) return 'Loyal Client (15% off)';
-        if ($this->discount_tier === 'new_client' && $this->total_bookings === 0) return 'New Client (10% off)';
+        if ($this->total_bookings >= static::loyalMinBookings()) return 'Loyal Client (' . static::loyalDiscountPct() . '% off)';
+        if ($this->discount_tier === 'new_client' && $this->total_bookings === 0) return 'New Client (' . static::newClientDiscountPct() . '% off)';
         $active = $this->activeDiscount;
         if ($active) return "Special Offer ({$active->percentage}% off)";
         return 'No Discount';

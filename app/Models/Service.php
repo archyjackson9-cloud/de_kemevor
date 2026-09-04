@@ -9,6 +9,7 @@ class Service extends Model
 {
     protected $fillable = [
         'name', 'slug', 'category', 'short_description', 'description',
+        'meta_title', 'meta_description',
         'duration', 'price_from', 'is_active', 'sort_order', 'image',
     ];
 
@@ -29,6 +30,7 @@ class Service extends Model
             'body_treatments'   => 'Body Treatments',
             'skin_treatments'   => 'Skin Treatments',
             'rejuvenation'      => 'Rejuvenation',
+            'body_enhancement'  => 'Body Enhancement',
             default             => $this->category,
         };
     }
@@ -40,6 +42,7 @@ class Service extends Model
             'body_treatments'   => 'teal',
             'skin_treatments'   => 'amber',
             'rejuvenation'      => 'purple',
+            'body_enhancement'  => 'green',
             default             => 'gold',
         };
     }
@@ -51,6 +54,32 @@ class Service extends Model
             : '';
     }
 
+    /**
+     * The long-form article body (from `description`), split into paragraphs
+     * for rendering as individual <p> tags on the service landing page.
+     */
+    public function getArticleParagraphsAttribute(): array
+    {
+        if (!$this->description) {
+            return [];
+        }
+
+        $normalized = str_replace(["\r\n", "\r"], "\n", trim($this->description));
+        $paragraphs = preg_split('/\n\s*\n/', $normalized);
+
+        return array_values(array_filter(array_map('trim', $paragraphs)));
+    }
+
+    public function getSeoTitleAttribute(): string
+    {
+        return $this->meta_title ?: "{$this->name} | The Healing Room Esthetic Clinic";
+    }
+
+    public function getSeoDescriptionAttribute(): string
+    {
+        return $this->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($this->short_description), 155);
+    }
+
     public static function getCategoryIcon(string $category): string
     {
         return match($category) {
@@ -58,6 +87,7 @@ class Service extends Model
             'body_treatments'   => '💆',
             'skin_treatments'   => '✨',
             'rejuvenation'      => '🌸',
+            'body_enhancement'  => '💪',
             default             => '💎',
         };
     }

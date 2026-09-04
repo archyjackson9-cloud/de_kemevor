@@ -20,11 +20,13 @@ use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 // ── Public Routes ──────────────────────────────────────────────────────────
 Route::get('/',        [HomeController::class,     'index'])->name('home');
 Route::get('/services',[ServicesController::class, 'index'])->name('services');
+Route::get('/services/{service:slug}', [ServicesController::class, 'show'])->name('services.show');
 Route::get('/about',   [AboutController::class,    'index'])->name('about');
 Route::get('/contact', [ContactController::class,  'index'])->name('contact');
 Route::post('/contact',[ContactController::class,  'send'])->name('contact.send');
@@ -78,6 +80,7 @@ Route::middleware(\App\Http\Middleware\AdminAuthenticate::class)->prefix('admin'
 
     // Discounts
     Route::get('/discounts',                        [DiscountController::class, 'index'])         ->name('admin.discounts');
+    Route::post('/discounts/tiers',                 [DiscountController::class, 'updateTiers'])   ->name('admin.discounts.tiers.update');
     Route::post('/discounts/promo',                 [DiscountController::class, 'storePromo'])     ->name('admin.discounts.promo.store');
     Route::post('/discounts/promo/{promoCode}/toggle', [DiscountController::class, 'togglePromo'])->name('admin.discounts.promo.toggle');
     Route::delete('/discounts/promo/{promoCode}',   [DiscountController::class, 'destroyPromo'])  ->name('admin.discounts.promo.destroy');
@@ -114,6 +117,18 @@ Route::middleware(\App\Http\Middleware\AdminAuthenticate::class)->prefix('admin'
     Route::delete('/hero-slides/{heroSlide}',      [HeroSlideController::class, 'destroy'])     ->name('admin.hero-slides.destroy');
     Route::post('/hero-slides/{heroSlide}/toggle', [HeroSlideController::class, 'toggleActive'])->name('admin.hero-slides.toggle');
 
+    // Pages — Home
+    Route::get('/pages/home',   [PageController::class, 'home'])      ->name('admin.pages.home');
+    Route::post('/pages/home',  [PageController::class, 'updateHome'])->name('admin.pages.home.update');
+    Route::post('/pages/home/values',                    [PageController::class, 'storeHomeValue'])  ->name('admin.pages.home.values.store');
+    Route::put('/pages/home/values/{homeValue}',         [PageController::class, 'updateHomeValue']) ->name('admin.pages.home.values.update');
+    Route::delete('/pages/home/values/{homeValue}',      [PageController::class, 'destroyHomeValue'])->name('admin.pages.home.values.destroy');
+    Route::post('/pages/home/values/{homeValue}/toggle', [PageController::class, 'toggleHomeValue']) ->name('admin.pages.home.values.toggle');
+    Route::post('/pages/home/testimonials',                        [PageController::class, 'storeTestimonial'])  ->name('admin.pages.home.testimonials.store');
+    Route::put('/pages/home/testimonials/{testimonial}',           [PageController::class, 'updateTestimonial']) ->name('admin.pages.home.testimonials.update');
+    Route::delete('/pages/home/testimonials/{testimonial}',        [PageController::class, 'destroyTestimonial'])->name('admin.pages.home.testimonials.destroy');
+    Route::post('/pages/home/testimonials/{testimonial}/toggle',   [PageController::class, 'toggleTestimonial']) ->name('admin.pages.home.testimonials.toggle');
+
     // Pages — About
     Route::get('/pages/about',    [PageController::class, 'about'])      ->name('admin.pages.about');
     Route::post('/pages/about',   [PageController::class, 'updateAbout'])->name('admin.pages.about.update');
@@ -129,6 +144,10 @@ Route::middleware(\App\Http\Middleware\AdminAuthenticate::class)->prefix('admin'
     // Pages — Contact
     Route::get('/pages/contact',  [PageController::class, 'contact'])       ->name('admin.pages.contact');
     Route::post('/pages/contact', [PageController::class, 'updateContact']) ->name('admin.pages.contact.update');
+
+    // Settings — Branding
+    Route::get('/settings',  [SettingsController::class, 'index']) ->name('admin.settings');
+    Route::post('/settings', [SettingsController::class, 'update'])->name('admin.settings.update');
 
     // Admin Users
     Route::get('/users',           [UserController::class, 'index'])  ->name('admin.users');

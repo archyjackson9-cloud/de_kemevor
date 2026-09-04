@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\CustomerDiscount;
 use App\Models\PromoCode;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 
 class DiscountController extends Controller
@@ -15,8 +16,30 @@ class DiscountController extends Controller
         $promoCodes         = PromoCode::orderByDesc('created_at')->get();
         $customers          = Customer::orderBy('first_name')->get();
         $customerDiscounts  = CustomerDiscount::with('customer')->orderByDesc('created_at')->get();
+        $tiers = [
+            'new_client_pct'     => Customer::newClientDiscountPct(),
+            'loyal_pct'           => Customer::loyalDiscountPct(),
+            'loyal_min_bookings'  => Customer::loyalMinBookings(),
+        ];
 
-        return view('admin.discounts.index', compact('promoCodes', 'customers', 'customerDiscounts'));
+        return view('admin.discounts.index', compact('promoCodes', 'customers', 'customerDiscounts', 'tiers'));
+    }
+
+    public function updateTiers(Request $request)
+    {
+        $validated = $request->validate([
+            'new_client_pct'     => 'required|integer|min:0|max:100',
+            'loyal_pct'          => 'required|integer|min:0|max:100',
+            'loyal_min_bookings' => 'required|integer|min:1|max:100',
+        ]);
+
+        SiteSetting::setMany([
+            'discount_new_client_pct'     => $validated['new_client_pct'],
+            'discount_loyal_pct'          => $validated['loyal_pct'],
+            'discount_loyal_min_bookings' => $validated['loyal_min_bookings'],
+        ]);
+
+        return redirect()->route('admin.discounts')->with('success', 'Automatic discount tiers updated.');
     }
 
     public function storePromo(Request $request)
@@ -79,7 +102,7 @@ class DiscountController extends Controller
         // Recalculate tier
         $hasActive = $customer->discounts()->where('is_active', true)->exists();
         if (!$hasActive) {
-            $tier = $customer->total_bookings >= 5 ? 'loyal' : ($customer->total_bookings === 0 ? 'new_client' : 'none');
+            $tier = $customer->total_bookings >= Customer::loyalMinBookings() ? 'loyal' : ($customer->total_bookings === 0 ? 'new_client' : 'none');
             $customer->update(['discount_tier' => $tier]);
         }
 

@@ -5,12 +5,192 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AboutCertification;
 use App\Models\AboutValue;
+use App\Models\HomeValue;
 use App\Models\SiteSetting;
+use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
 {
+    // ── Home Page ─────────────────────────────────────────────────────────
+
+    public function home()
+    {
+        $s            = SiteSetting::forPage('home_');
+        $homeValues   = HomeValue::orderBy('sort_order')->orderBy('id')->get();
+        $testimonials = Testimonial::orderBy('sort_order')->orderBy('id')->get();
+
+        return view('admin.pages.home', compact('s', 'homeValues', 'testimonials'));
+    }
+
+    public function updateHome(Request $request)
+    {
+        $request->validate([
+            'home_story_eyebrow'      => 'nullable|string|max:100',
+            'home_story_title'        => 'nullable|string|max:150',
+            'home_story_body'         => 'nullable|string|max:3000',
+            'home_story_badge_num'    => 'nullable|string|max:20',
+            'home_story_badge_label'  => 'nullable|string|max:60',
+            'home_story_media'        => 'nullable|image|mimes:jpeg,png,jpg,webp|max:51200',
+            'home_services_eyebrow'   => 'nullable|string|max:100',
+            'home_services_title'     => 'nullable|string|max:150',
+            'home_services_sub'       => 'nullable|string|max:300',
+            'home_why_eyebrow'        => 'nullable|string|max:100',
+            'home_why_title'          => 'nullable|string|max:150',
+            'home_why_backdrop'       => 'nullable|image|mimes:jpeg,png,jpg,webp|max:8192',
+            'home_gallery_eyebrow'    => 'nullable|string|max:100',
+            'home_gallery_sub'        => 'nullable|string|max:300',
+            'home_cta_title'          => 'nullable|string|max:150',
+            'home_cta_sub'            => 'nullable|string|max:300',
+        ]);
+
+        $keys = [
+            'home_story_eyebrow', 'home_story_title', 'home_story_body',
+            'home_story_badge_num', 'home_story_badge_label',
+            'home_services_eyebrow', 'home_services_title', 'home_services_sub',
+            'home_why_eyebrow', 'home_why_title',
+            'home_gallery_eyebrow', 'home_gallery_sub',
+            'home_cta_title', 'home_cta_sub',
+        ];
+
+        $data = [];
+        foreach ($keys as $key) {
+            $data[$key] = $request->input($key);
+        }
+
+        if ($request->boolean('home_remove_story_media')) {
+            $existing = SiteSetting::get('home_story_media');
+            if ($existing) Storage::disk('public')->delete($existing);
+            $data['home_story_media'] = null;
+        } elseif ($request->hasFile('home_story_media')) {
+            $existing = SiteSetting::get('home_story_media');
+            if ($existing) Storage::disk('public')->delete($existing);
+            $data['home_story_media'] = $request->file('home_story_media')->store('pages', 'public');
+        }
+
+        if ($request->boolean('home_remove_why_backdrop')) {
+            $existing = SiteSetting::get('home_why_backdrop');
+            if ($existing) Storage::disk('public')->delete($existing);
+            $data['home_why_backdrop'] = null;
+        } elseif ($request->hasFile('home_why_backdrop')) {
+            $existing = SiteSetting::get('home_why_backdrop');
+            if ($existing) Storage::disk('public')->delete($existing);
+            $data['home_why_backdrop'] = $request->file('home_why_backdrop')->store('pages', 'public');
+        }
+
+        SiteSetting::setMany($data);
+
+        return redirect()->route('admin.pages.home')->with('success', 'Home page settings saved.');
+    }
+
+    // ── Home "Why Choose Us" Value Cards ────────────────────────────────────
+
+    public function storeHomeValue(Request $request)
+    {
+        $request->validate([
+            'image'      => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'icon'       => 'nullable|string|max:50',
+            'title'      => 'required|string|max:100',
+            'body'       => 'required|string|max:500',
+            'sort_order' => 'nullable|integer',
+        ]);
+
+        HomeValue::create([
+            'image'      => $request->file('image')->store('home-values', 'public'),
+            'icon'       => $request->icon,
+            'title'      => $request->title,
+            'body'       => $request->body,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_active'  => true,
+        ]);
+
+        return redirect()->route('admin.pages.home')->with('success', 'Value card added.');
+    }
+
+    public function updateHomeValue(Request $request, HomeValue $homeValue)
+    {
+        $request->validate([
+            'image'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'icon'       => 'nullable|string|max:50',
+            'title'      => 'required|string|max:100',
+            'body'       => 'required|string|max:500',
+            'sort_order' => 'nullable|integer',
+        ]);
+
+        $data = $request->only('icon', 'title', 'body', 'sort_order');
+        $data['sort_order'] = $data['sort_order'] ?? 0;
+
+        if ($request->hasFile('image')) {
+            if ($homeValue->image) Storage::disk('public')->delete($homeValue->image);
+            $data['image'] = $request->file('image')->store('home-values', 'public');
+        }
+
+        $homeValue->update($data);
+
+        return redirect()->route('admin.pages.home')->with('success', 'Value card updated.');
+    }
+
+    public function destroyHomeValue(HomeValue $homeValue)
+    {
+        if ($homeValue->image) Storage::disk('public')->delete($homeValue->image);
+        $homeValue->delete();
+        return redirect()->route('admin.pages.home')->with('success', 'Value card deleted.');
+    }
+
+    public function toggleHomeValue(HomeValue $homeValue)
+    {
+        $homeValue->update(['is_active' => !$homeValue->is_active]);
+        return redirect()->back()->with('success', 'Value card visibility updated.');
+    }
+
+    // ── Home Testimonials ────────────────────────────────────────────────────
+
+    public function storeTestimonial(Request $request)
+    {
+        $request->validate([
+            'name'       => 'required|string|max:100',
+            'quote'      => 'required|string|max:500',
+            'sort_order' => 'nullable|integer',
+        ]);
+
+        Testimonial::create([
+            'name'       => $request->name,
+            'quote'      => $request->quote,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_active'  => true,
+        ]);
+
+        return redirect()->route('admin.pages.home')->with('success', 'Testimonial added.');
+    }
+
+    public function updateTestimonial(Request $request, Testimonial $testimonial)
+    {
+        $request->validate([
+            'name'       => 'required|string|max:100',
+            'quote'      => 'required|string|max:500',
+            'sort_order' => 'nullable|integer',
+        ]);
+
+        $data = $request->only('name', 'quote', 'sort_order');
+        $data['sort_order'] = $data['sort_order'] ?? 0;
+        $testimonial->update($data);
+
+        return redirect()->route('admin.pages.home')->with('success', 'Testimonial updated.');
+    }
+
+    public function destroyTestimonial(Testimonial $testimonial)
+    {
+        $testimonial->delete();
+        return redirect()->route('admin.pages.home')->with('success', 'Testimonial deleted.');
+    }
+
+    public function toggleTestimonial(Testimonial $testimonial)
+    {
+        $testimonial->update(['is_active' => !$testimonial->is_active]);
+        return redirect()->back()->with('success', 'Testimonial visibility updated.');
+    }
+
     // ── About Page ────────────────────────────────────────────────────────
 
     public function about()

@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
+    private const CATEGORIES = 'maternity_postop,body_treatments,skin_treatments,rejuvenation,body_enhancement';
+
     public function index()
     {
         $services = Service::orderBy('sort_order')->orderBy('name')->get();
@@ -20,8 +22,11 @@ class ServiceController extends Controller
     {
         $validated = $request->validate([
             'name'              => 'required|string|max:100',
-            'category'          => 'required|in:maternity_postop,body_treatments,skin_treatments,rejuvenation',
+            'category'          => 'required|in:' . self::CATEGORIES,
             'short_description' => 'required|string|max:300',
+            'description'       => 'nullable|string|max:4000',
+            'meta_title'        => 'nullable|string|max:160',
+            'meta_description'  => 'nullable|string|max:300',
             'duration'          => 'required|string|max:50',
             'price_from'        => 'required|numeric|min:0',
             'sort_order'        => 'nullable|integer',
@@ -45,8 +50,11 @@ class ServiceController extends Controller
     {
         $validated = $request->validate([
             'name'              => 'sometimes|string|max:100',
-            'category'          => 'sometimes|in:maternity_postop,body_treatments,skin_treatments,rejuvenation',
+            'category'          => 'sometimes|in:' . self::CATEGORIES,
             'short_description' => 'sometimes|string|max:300',
+            'description'       => 'nullable|string|max:4000',
+            'meta_title'        => 'nullable|string|max:160',
+            'meta_description'  => 'nullable|string|max:300',
             'duration'          => 'sometimes|string|max:50',
             'price_from'        => 'sometimes|numeric|min:0',
             'sort_order'        => 'nullable|integer',

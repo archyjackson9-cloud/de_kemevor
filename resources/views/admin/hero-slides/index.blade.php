@@ -13,7 +13,7 @@
 <div class="admin-card">
     <div class="admin-card__header">
         <h3><i class="fas fa-images"></i> Slides ({{ $slides->count() }})</h3>
-        <span style="font-size:13px;color:#888">Slides rotate on the homepage hero, in order.</span>
+        <span style="font-size:13px;color:#888">Slides rotate on the homepage hero, in order. Slides with a video autoplay muted &amp; looped, using the image as the poster/fallback.</span>
     </div>
     @if($slides->isEmpty())
     <div class="admin-empty"><i class="fas fa-images"></i> No slides yet. The homepage will show a default hero until you add one.</div>
@@ -21,13 +21,27 @@
     <div class="admin-table-wrap">
         <table class="admin-table">
             <thead>
-                <tr><th>Image</th><th>Eyebrow</th><th>Title</th><th>Subtitle</th><th>Order</th><th>Visible</th><th>Actions</th></tr>
+                <tr><th>Media</th><th>Eyebrow</th><th>Title</th><th>Subtitle</th><th>Order</th><th>Visible</th><th>Actions</th></tr>
             </thead>
             <tbody>
                 @foreach($slides as $s)
+                @php
+                    $slidePayload = [
+                        'id' => $s->id, 'eyebrow' => $s->eyebrow, 'title' => $s->title,
+                        'title_gold' => $s->title_gold, 'subtitle' => $s->subtitle,
+                        'sort_order' => $s->sort_order ?? 0, 'image_url' => $s->image_url,
+                        'has_video' => $s->has_video,
+                    ];
+                    $slidePayloadJson = json_encode($slidePayload);
+                @endphp
                 <tr>
-                    <td>
+                    <td style="position:relative">
                         <img src="{{ $s->image_url }}" alt="" style="height:44px;width:80px;object-fit:cover;border-radius:4px">
+                        @if($s->has_video)
+                        <span title="Has background video" style="position:absolute;top:2px;left:2px;background:rgba(0,0,0,.65);color:#fff;font-size:10px;padding:1px 5px;border-radius:4px">
+                            <i class="fas fa-video"></i>
+                        </span>
+                        @endif
                     </td>
                     <td>{{ $s->eyebrow }}</td>
                     <td><strong>{{ $s->title }}</strong>{{ $s->title_gold ? ' '.$s->title_gold : '' }}</td>
@@ -42,8 +56,7 @@
                         </form>
                     </td>
                     <td class="admin-table__actions">
-                        <button class="btn btn-xs btn-outline"
-                            onclick="editSlide({{ $s->id }}, '{{ addslashes($s->eyebrow ?? '') }}', '{{ addslashes($s->title ?? '') }}', '{{ addslashes($s->title_gold ?? '') }}', '{{ addslashes($s->subtitle ?? '') }}', {{ $s->sort_order ?? 0 }}, '{{ $s->image_url }}')">
+                        <button class="btn btn-xs btn-outline" data-slide='{{ $slidePayloadJson }}' onclick="editSlide(this)">
                             <i class="fas fa-edit"></i>
                         </button>
                         <form method="POST" action="{{ route('admin.hero-slides.destroy', $s->id) }}" style="display:inline"
@@ -70,8 +83,12 @@
         <form method="POST" action="{{ route('admin.hero-slides.store') }}" class="thr-form" enctype="multipart/form-data">
             @csrf
             <div class="thr-form__group">
-                <label>Background Image <span class="req">*</span> <span style="font-size:12px;color:#888">(1600px+ wide recommended)</span></label>
+                <label>Background Image <span class="req">*</span> <span style="font-size:12px;color:#888">(1600px+ wide recommended — used as the poster/fallback)</span></label>
                 <input type="file" name="image" required accept="image/jpeg,image/png,image/jpg,image/webp" class="admin-file-input">
+            </div>
+            <div class="thr-form__group">
+                <label>Background Video <span style="font-size:12px;color:#888">(optional — MP4/WebM, max 50MB. If provided, this autoplays muted &amp; looped instead of the image.)</span></label>
+                <input type="file" name="video" accept="video/mp4,video/webm,video/ogg,video/quicktime" class="admin-file-input">
             </div>
             <div class="thr-form__group">
                 <label>Eyebrow</label>
@@ -123,6 +140,14 @@
                 <input type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/webp" class="admin-file-input">
             </div>
             <div class="thr-form__group">
+                <label>Background Video</label>
+                <div id="editSlideVideoStatus" style="font-size:13px;color:#888;margin-bottom:.5rem"></div>
+                <input type="file" name="video" accept="video/mp4,video/webm,video/ogg,video/quicktime" class="admin-file-input">
+                <label id="editSlideRemoveVideoWrap" style="display:none;align-items:center;gap:.4rem;margin-top:.5rem;font-size:13px;cursor:pointer;color:#dc2626">
+                    <input type="checkbox" name="remove_video" value="1"> Remove current video
+                </label>
+            </div>
+            <div class="thr-form__group">
                 <label>Eyebrow</label>
                 <input type="text" name="eyebrow" id="editSlideEyebrow">
             </div>
@@ -156,15 +181,30 @@
 
 @push('scripts')
 <script>
-function editSlide(id, eyebrow, title, titleGold, subtitle, sort, imageUrl) {
-    document.getElementById('editSlideForm').action = `/admin/hero-slides/${id}`;
-    document.getElementById('editSlideEyebrow').value   = eyebrow;
-    document.getElementById('editSlideTitle').value     = title;
-    document.getElementById('editSlideTitleGold').value = titleGold;
-    document.getElementById('editSlideSubtitle').value  = subtitle;
-    document.getElementById('editSlideSort').value      = sort;
-    document.getElementById('editSlideImagePreview').src = imageUrl;
+function editSlide(btn) {
+    const s = JSON.parse(btn.dataset.slide);
+
+    document.getElementById('editSlideForm').action = `/admin/hero-slides/${s.id}`;
+    document.getElementById('editSlideEyebrow').value   = s.eyebrow ?? '';
+    document.getElementById('editSlideTitle').value     = s.title ?? '';
+    document.getElementById('editSlideTitleGold').value = s.title_gold ?? '';
+    document.getElementById('editSlideSubtitle').value  = s.subtitle ?? '';
+    document.getElementById('editSlideSort').value      = s.sort_order ?? 0;
+    document.getElementById('editSlideImagePreview').src = s.image_url ?? '';
     document.querySelector('#editSlideForm input[name="image"]').value = '';
+    document.querySelector('#editSlideForm input[name="video"]').value = '';
+
+    const statusEl = document.getElementById('editSlideVideoStatus');
+    const removeWrap = document.getElementById('editSlideRemoveVideoWrap');
+    const removeCb = removeWrap.querySelector('input[name="remove_video"]');
+    removeCb.checked = false;
+    if (s.has_video) {
+        statusEl.innerHTML = '<i class="fas fa-video" style="color:#c8972b"></i> This slide currently has a video.';
+        removeWrap.style.display = 'flex';
+    } else {
+        statusEl.textContent = 'No video set — image only.';
+        removeWrap.style.display = 'none';
+    }
 
     document.getElementById('editSlideModal').style.display = 'flex';
 }

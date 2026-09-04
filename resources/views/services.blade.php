@@ -43,7 +43,9 @@
                     </div>
                     @endif
                     <div class="thr-service-item__body">
-                        <h3 class="thr-service-item__name">{{ $service->name }}</h3>
+                        <h3 class="thr-service-item__name">
+                            <a href="{{ route('services.show', $service->slug) }}" style="color:inherit;text-decoration:none">{{ $service->name }}</a>
+                        </h3>
                         <p class="thr-service-item__desc">{{ $service->short_description }}</p>
                         <div class="thr-service-item__meta">
                             <span class="thr-meta-badge"><i class="fas fa-clock"></i> {{ $service->duration }}</span>
@@ -54,6 +56,9 @@
                             <span class="thr-service-item__price-label">From</span>
                             <span class="thr-service-item__price-amount">GHS {{ number_format($service->price_from, 0) }}</span>
                         </div>
+                        <a href="{{ route('services.show', $service->slug) }}" class="btn btn-outline-gold btn-sm">
+                            Learn More
+                        </a>
                         <a href="{{ route('booking') }}?service={{ $service->slug }}" class="btn btn-gold btn-sm">
                             Book This Service
                         </a>

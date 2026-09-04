@@ -17,7 +17,9 @@
     {{-- Sidebar --}}
     <aside class="admin-sidebar" id="adminSidebar">
         <div class="admin-sidebar__brand">
-            <span>🌿</span>
+             @if($siteLogo = \App\Models\SiteSetting::get('site_logo'))
+             <img src="{{ asset('storage/'.$siteLogo) }}" alt="The Healing Room" class="thr-nav__brand-logo">
+             @endif
             <div>
                 <div class="admin-sidebar__brand-main">The Healing Room</div>
                 <div class="admin-sidebar__brand-sub">Admin Panel</div>
@@ -25,6 +27,7 @@
         </div>
 
         <nav class="admin-sidebar__nav">
+            <div class="admin-sidebar__group-label">Business Operation</div>
             <a href="{{ route('admin.dashboard') }}" class="admin-nav-item {{ request()->routeIs('admin.dashboard*') ? 'active' : '' }}">
                 <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
             </a>
@@ -33,9 +36,6 @@
             </a>
             <a href="{{ route('admin.customers') }}" class="admin-nav-item {{ request()->routeIs('admin.customers*') ? 'active' : '' }}">
                 <i class="fas fa-users"></i> <span>Customers</span>
-            </a>
-            <a href="{{ route('admin.services') }}" class="admin-nav-item {{ request()->routeIs('admin.services*') ? 'active' : '' }}">
-                <i class="fas fa-spa"></i> <span>Services</span>
             </a>
             <a href="{{ route('admin.discounts') }}" class="admin-nav-item {{ request()->routeIs('admin.discounts*') ? 'active' : '' }}">
                 <i class="fas fa-tags"></i> <span>Discounts</span>
@@ -49,6 +49,11 @@
             <a href="{{ route('admin.consultations') }}" class="admin-nav-item {{ request()->routeIs('admin.consultations*') ? 'active' : '' }}">
                 <i class="fas fa-stethoscope"></i> <span>E-Consultations</span>
             </a>
+
+            <div class="admin-sidebar__group-label">Web Management</div>
+            <a href="{{ route('admin.services') }}" class="admin-nav-item {{ request()->routeIs('admin.services*') ? 'active' : '' }}">
+                <i class="fas fa-spa"></i> <span>Services</span>
+            </a>
             <a href="{{ route('admin.team') }}" class="admin-nav-item {{ request()->routeIs('admin.team*') ? 'active' : '' }}">
                 <i class="fas fa-user-friends"></i> <span>Team Members</span>
             </a>
@@ -58,8 +63,11 @@
             <a href="{{ route('admin.hero-slides') }}" class="admin-nav-item {{ request()->routeIs('admin.hero-slides*') ? 'active' : '' }}">
                 <i class="fas fa-images"></i> <span>Hero Slider</span>
             </a>
-            <a href="{{ route('admin.pages.about') }}" class="admin-nav-item {{ request()->routeIs('admin.pages*') ? 'active' : '' }}">
+            <a href="{{ route('admin.pages.home') }}" class="admin-nav-item {{ request()->routeIs('admin.pages*') ? 'active' : '' }}">
                 <i class="fas fa-file-alt"></i> <span>Pages</span>
+            </a>
+            <a href="{{ route('admin.settings') }}" class="admin-nav-item {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
+                <i class="fas fa-image"></i> <span>Branding</span>
             </a>
             <a href="{{ route('admin.users') }}" class="admin-nav-item {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
                 <i class="fas fa-user-shield"></i> <span>Admin Users</span>

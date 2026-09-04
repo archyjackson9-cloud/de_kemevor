@@ -52,36 +52,36 @@
                 <p class="thr-booking-step__sub">Choose from our range of premium treatments.</p>
 
                 <div class="thr-service-picker">
-                    @php
-                    $categories = [
-                        'maternity_postop' => ['label' => '🤱 Maternity & Post-Op Care', 'color' => 'pink'],
-                        'body_treatments'  => ['label' => '💆 Body Treatments', 'color' => 'teal'],
-                        'skin_treatments'  => ['label' => '✨ Skin Treatments', 'color' => 'amber'],
-                        'rejuvenation'     => ['label' => '🌸 Rejuvenation', 'color' => 'purple'],
-                    ];
-                    $grouped = $services->groupBy('category');
-                    @endphp
-
-                    @foreach($categories as $catKey => $catMeta)
-                    @if(isset($grouped[$catKey]) && $grouped[$catKey]->count())
-                    <div class="thr-service-picker__group">
-                        <div class="thr-service-picker__group-label">{{ $catMeta['label'] }}</div>
-                        @foreach($grouped[$catKey] as $service)
-                        <label class="thr-service-picker__item {{ $preselectedService === $service->slug ? 'selected' : '' }}">
-                            <input type="radio" name="service_id" value="{{ $service->id }}"
-                                {{ ($preselectedService === $service->slug || old('service_id') == $service->id) ? 'checked' : '' }}>
-                            <div class="thr-service-picker__info">
-                                <span class="thr-service-picker__name">{{ $service->name }}</span>
-                                <span class="thr-service-picker__meta">
-                                    <span><i class="fas fa-clock"></i> {{ $service->duration }}</span>
-                                    <span><i class="fas fa-tag"></i> From GHS {{ number_format($service->price_from, 0) }}</span>
-                                </span>
+                    @foreach($servicesByCategory as $catKey => $catData)
+                    <div class="thr-picker-category">
+                        <div class="thr-picker-category__cover thr-picker-category__cover--{{ $catData['meta']['color'] }} {{ $catData['cover'] ? '' : 'thr-picker-category__cover--placeholder' }}"
+                             @if($catData['cover']) style="background-image:url('{{ $catData['cover'] }}')" @endif>
+                            <div class="thr-picker-category__cover-overlay"></div>
+                            <div class="thr-picker-category__cover-content">
+                                <span class="thr-picker-category__icon">{{ $catData['meta']['icon'] }}</span>
+                                <div>
+                                    <h3>{{ $catData['meta']['label'] }}</h3>
+                                    <span class="thr-picker-category__count">{{ $catData['services']->count() }} treatment{{ $catData['services']->count() > 1 ? 's' : '' }}</span>
+                                </div>
                             </div>
-                            <div class="thr-service-picker__check"><i class="fas fa-check"></i></div>
-                        </label>
-                        @endforeach
+                        </div>
+                        <div class="thr-service-picker__group">
+                            @foreach($catData['services'] as $service)
+                            <label class="thr-service-picker__item {{ $preselectedService === $service->slug ? 'selected' : '' }}">
+                                <input type="radio" name="service_id" value="{{ $service->id }}"
+                                    {{ ($preselectedService === $service->slug || old('service_id') == $service->id) ? 'checked' : '' }}>
+                                <div class="thr-service-picker__info">
+                                    <span class="thr-service-picker__name">{{ $service->name }}</span>
+                                    <span class="thr-service-picker__meta">
+                                        <span><i class="fas fa-clock"></i> {{ $service->duration }}</span>
+                                        <span><i class="fas fa-tag"></i> From GHS {{ number_format($service->price_from, 0) }}</span>
+                                    </span>
+                                </div>
+                                <div class="thr-service-picker__check"><i class="fas fa-check"></i></div>
+                            </label>
+                            @endforeach
+                        </div>
                     </div>
-                    @endif
                     @endforeach
 
                     <label class="thr-service-picker__item thr-service-picker__item--help">
@@ -297,7 +297,7 @@ function nextStep(n) {
 
 function prevStep(n) { gotoStep(n); }
 
-function gotoStep(n) {
+function gotoStep(n, scroll = true) {
     document.querySelectorAll('.thr-booking-step').forEach((el, i) => {
         el.classList.remove('active');
     });
@@ -311,7 +311,9 @@ function gotoStep(n) {
     });
 
     currentStep = n;
-    window.scrollTo({ top: document.querySelector('.thr-stepper').offsetTop - 80, behavior: 'smooth' });
+    if (scroll) {
+        window.scrollTo({ top: document.querySelector('.thr-stepper').offsetTop - 80, behavior: 'smooth' });
+    }
 }
 
 // ── Calendar ──────────────────────────────────────────────────────────────
@@ -419,6 +421,10 @@ document.getElementById('nextMonth').addEventListener('click', () => {
 });
 
 renderCalendar();
+
+@if($preselectedService && $services->contains('slug', $preselectedService))
+gotoStep(2, false);
+@endif
 
 // ── Review Summary ────────────────────────────────────────────────────────
 function populateReview() {
