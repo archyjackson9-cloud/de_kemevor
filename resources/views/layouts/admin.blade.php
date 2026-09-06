@@ -49,6 +49,9 @@
             <a href="{{ route('admin.consultations') }}" class="admin-nav-item {{ request()->routeIs('admin.consultations*') ? 'active' : '' }}">
                 <i class="fas fa-stethoscope"></i> <span>E-Consultations</span>
             </a>
+            <a href="{{ route('admin.training-inquiries') }}" class="admin-nav-item {{ request()->routeIs('admin.training-inquiries*') ? 'active' : '' }}">
+                <i class="fas fa-graduation-cap"></i> <span>Training Inquiries</span>
+            </a>
 
             <div class="admin-sidebar__group-label">Web Management</div>
             <a href="{{ route('admin.services') }}" class="admin-nav-item {{ request()->routeIs('admin.services*') ? 'active' : '' }}">

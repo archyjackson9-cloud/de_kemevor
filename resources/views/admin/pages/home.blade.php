@@ -14,6 +14,9 @@
     <a href="{{ route('admin.pages.contact') }}" class="btn btn-outline btn-sm">
         <i class="fas fa-envelope"></i> Contact Page
     </a>
+    <a href="{{ route('admin.pages.training') }}" class="btn btn-outline btn-sm">
+        <i class="fas fa-graduation-cap"></i> Training Page
+    </a>
     <a href="{{ route('home') }}" target="_blank" class="btn btn-outline btn-sm">
         <i class="fas fa-external-link-alt"></i> Preview Page
     </a>

@@ -54,6 +54,7 @@
             <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
             <li><a href="{{ route('services') }}" class="{{ request()->routeIs('services') ? 'active' : '' }}">Services</a></li>
             <li><a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}">About</a></li>
+            <li><a href="{{ route('training') }}" class="{{ request()->routeIs('training*') ? 'active' : '' }}">Training</a></li>
             <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}">Contact</a></li>
             <li><a href="{{ route('econsultation') }}" class="{{ request()->routeIs('econsultation*') ? 'active' : '' }}">E-Consultation</a></li>
             <li><a href="{{ route('booking') }}" class="thr-nav__cta {{ request()->routeIs('booking*') ? 'active' : '' }}">Book Now</a></li>
@@ -110,6 +111,7 @@
                     <li><a href="{{ route('home') }}">Home</a></li>
                     <li><a href="{{ route('services') }}">Services</a></li>
                     <li><a href="{{ route('about') }}">About Us</a></li>
+                    <li><a href="{{ route('training') }}">Training Program</a></li>
                     <li><a href="{{ route('booking') }}">Book Appointment</a></li>
                     <li><a href="{{ route('contact') }}">Contact</a></li>
                     <li><a href="{{ route('econsultation') }}">E-Consultation</a></li>

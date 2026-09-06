@@ -6,6 +6,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\EConsultationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
@@ -19,6 +20,8 @@ use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\TrainingPageController;
+use App\Http\Controllers\Admin\TrainingInquiryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SettingsController;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +33,10 @@ Route::get('/services/{service:slug}', [ServicesController::class, 'show'])->nam
 Route::get('/about',   [AboutController::class,    'index'])->name('about');
 Route::get('/contact', [ContactController::class,  'index'])->name('contact');
 Route::post('/contact',[ContactController::class,  'send'])->name('contact.send');
+
+// Training
+Route::get('/training',        [TrainingController::class, 'index']) ->name('training');
+Route::post('/training/enroll',[TrainingController::class, 'enroll'])->name('training.enroll');
 
 // E-Consultation
 Route::get('/e-consultation',  [EConsultationController::class, 'index'])->name('econsultation');
@@ -145,6 +152,26 @@ Route::middleware(\App\Http\Middleware\AdminAuthenticate::class)->prefix('admin'
     Route::get('/pages/contact',  [PageController::class, 'contact'])       ->name('admin.pages.contact');
     Route::post('/pages/contact', [PageController::class, 'updateContact']) ->name('admin.pages.contact.update');
 
+    // Pages — Training
+    Route::get('/pages/training',  [TrainingPageController::class, 'index']) ->name('admin.pages.training');
+    Route::post('/pages/training', [TrainingPageController::class, 'update'])->name('admin.pages.training.update');
+    Route::post('/pages/training/phases',                   [TrainingPageController::class, 'storePhase'])  ->name('admin.pages.training.phases.store');
+    Route::put('/pages/training/phases/{phase}',            [TrainingPageController::class, 'updatePhase']) ->name('admin.pages.training.phases.update');
+    Route::delete('/pages/training/phases/{phase}',         [TrainingPageController::class, 'destroyPhase'])->name('admin.pages.training.phases.destroy');
+    Route::post('/pages/training/phases/{phase}/toggle',    [TrainingPageController::class, 'togglePhase']) ->name('admin.pages.training.phases.toggle');
+    Route::post('/pages/training/who-for',                  [TrainingPageController::class, 'storeWhoFor'])  ->name('admin.pages.training.who-for.store');
+    Route::put('/pages/training/who-for/{whoFor}',          [TrainingPageController::class, 'updateWhoFor']) ->name('admin.pages.training.who-for.update');
+    Route::delete('/pages/training/who-for/{whoFor}',       [TrainingPageController::class, 'destroyWhoFor'])->name('admin.pages.training.who-for.destroy');
+    Route::post('/pages/training/who-for/{whoFor}/toggle',  [TrainingPageController::class, 'toggleWhoFor']) ->name('admin.pages.training.who-for.toggle');
+    Route::post('/pages/training/learn',                    [TrainingPageController::class, 'storeLearnPoint'])  ->name('admin.pages.training.learn.store');
+    Route::put('/pages/training/learn/{learnPoint}',        [TrainingPageController::class, 'updateLearnPoint']) ->name('admin.pages.training.learn.update');
+    Route::delete('/pages/training/learn/{learnPoint}',     [TrainingPageController::class, 'destroyLearnPoint'])->name('admin.pages.training.learn.destroy');
+    Route::post('/pages/training/learn/{learnPoint}/toggle',[TrainingPageController::class, 'toggleLearnPoint']) ->name('admin.pages.training.learn.toggle');
+    Route::post('/pages/training/gain',                     [TrainingPageController::class, 'storeGainItem'])  ->name('admin.pages.training.gain.store');
+    Route::put('/pages/training/gain/{gainItem}',           [TrainingPageController::class, 'updateGainItem']) ->name('admin.pages.training.gain.update');
+    Route::delete('/pages/training/gain/{gainItem}',        [TrainingPageController::class, 'destroyGainItem'])->name('admin.pages.training.gain.destroy');
+    Route::post('/pages/training/gain/{gainItem}/toggle',   [TrainingPageController::class, 'toggleGainItem']) ->name('admin.pages.training.gain.toggle');
+
     // Settings — Branding
     Route::get('/settings',  [SettingsController::class, 'index']) ->name('admin.settings');
     Route::post('/settings', [SettingsController::class, 'update'])->name('admin.settings.update');
@@ -160,4 +187,10 @@ Route::middleware(\App\Http\Middleware\AdminAuthenticate::class)->prefix('admin'
     Route::get('/consultations/{consultation}',  [ConsultationController::class, 'show'])   ->name('admin.consultations.show');
     Route::post('/consultations/{consultation}/respond', [ConsultationController::class, 'respond'])->name('admin.consultations.respond');
     Route::delete('/consultations/{consultation}', [ConsultationController::class, 'destroy'])->name('admin.consultations.destroy');
+
+    // Training Inquiries
+    Route::get('/training-inquiries',                    [TrainingInquiryController::class, 'index'])  ->name('admin.training-inquiries');
+    Route::get('/training-inquiries/{trainingInquiry}',   [TrainingInquiryController::class, 'show'])   ->name('admin.training-inquiries.show');
+    Route::post('/training-inquiries/{trainingInquiry}/respond', [TrainingInquiryController::class, 'respond'])->name('admin.training-inquiries.respond');
+    Route::delete('/training-inquiries/{trainingInquiry}', [TrainingInquiryController::class, 'destroy'])->name('admin.training-inquiries.destroy');
 });

@@ -882,3 +882,66 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-serif); font-weight: 600; line-heigh
 .thr-related-card__name { font-family: var(--font-serif); font-size: 1.15rem; color: var(--deep); margin-bottom: .4rem; }
 .thr-related-card__desc { font-size: .85rem; color: var(--text-light); line-height: 1.6; margin-bottom: .85rem; }
 .thr-related-card__price { font-size: .85rem; color: var(--gold); font-weight: 600; }
+
+/* ── Training Page: checklist (Who Is This For / What You'll Learn) ──── */
+.thr-cert-badge--dark { border: 1px solid var(--border); color: var(--deep); background: var(--bg-white); }
+.thr-cert-badge--dark i { color: var(--green); }
+.thr-checklist { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; max-width: 980px; margin: 0 auto; }
+.thr-checklist__item { display: flex; align-items: flex-start; gap: .85rem; }
+.thr-checklist__icon {
+  width: 26px; height: 26px; border-radius: 50%; background: var(--gold-bg); color: var(--gold);
+  display: flex; align-items: center; justify-content: center; font-size: .75rem; flex-shrink: 0; margin-top: .1rem;
+}
+.thr-checklist__item p { margin: 0; color: var(--text-light); line-height: 1.6; }
+
+/* ── Training Page: "What You'll Gain" dark cards ─────────────────────── */
+.thr-value-grid--icons { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.thr-expect-item--dark { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); text-align: center; }
+.thr-expect-item--dark .thr-expect-item__icon { margin-left: auto; margin-right: auto; }
+.thr-expect-item--dark h4 { color: var(--gold-light); font-family: var(--font-serif); font-size: 1.1rem; }
+.thr-expect-item--dark p { color: rgba(255,255,255,.7); }
+
+/* ── Training Page: Course Structure phase cards ──────────────────────── */
+.thr-phase-list { display: flex; flex-direction: column; gap: 3.5rem; margin-top: 2.5rem; }
+.thr-phase { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+.thr-phase--reverse .thr-phase__visual { order: 2; }
+.thr-phase--reverse .thr-phase__content { order: 1; }
+.thr-phase__visual { position: relative; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); aspect-ratio: 4/3; }
+.thr-phase__visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thr-phase__placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: rgba(255,255,255,.9); }
+.thr-phase__placeholder--pink   { background: linear-gradient(135deg, #f9a8d4, #db2777); }
+.thr-phase__placeholder--teal   { background: linear-gradient(135deg, #5eead4, #0d9488); }
+.thr-phase__placeholder--amber  { background: linear-gradient(135deg, #fcd34d, #b45309); }
+.thr-phase__placeholder--purple { background: linear-gradient(135deg, #c4b5fd, #7c3aed); }
+.thr-phase__placeholder--green  { background: linear-gradient(135deg, #86efac, #16a34a); }
+.thr-phase__badge {
+  position: absolute; top: 1.25rem; left: 1.25rem;
+  background: rgba(255,255,255,.95); border-radius: var(--radius); padding: .6rem 1.1rem;
+  box-shadow: var(--shadow-lg); text-align: center; line-height: 1.1;
+}
+.thr-phase__badge span { display: block; font-size: .65rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-light); font-weight: 600; }
+.thr-phase__badge strong { display: block; font-family: var(--font-serif); font-size: 1.6rem; }
+.thr-phase__badge--pink strong   { color: #db2777; }
+.thr-phase__badge--teal strong   { color: #0d9488; }
+.thr-phase__badge--amber strong  { color: #b45309; }
+.thr-phase__badge--purple strong { color: #7c3aed; }
+.thr-phase__badge--green strong  { color: var(--green); }
+.thr-phase__subtitle { font-size: .82rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--gold); margin-bottom: .4rem; }
+.thr-phase__content h3 { font-family: var(--font-serif); font-size: 1.65rem; color: var(--deep); margin-bottom: .75rem; }
+.thr-phase__desc { color: var(--text-light); line-height: 1.75; margin-bottom: 1.25rem; }
+.thr-phase__topics { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .6rem; }
+.thr-phase__topics li { display: flex; align-items: flex-start; gap: .6rem; font-size: .92rem; color: var(--deep); }
+.thr-phase__topics li i { color: var(--green); margin-top: .25rem; font-size: .8rem; }
+@media (max-width: 768px) {
+  .thr-phase, .thr-phase--reverse { grid-template-columns: 1fr; }
+  .thr-phase--reverse .thr-phase__visual, .thr-phase--reverse .thr-phase__content { order: initial; }
+}
+
+/* ── Training Page: Certificate seal ──────────────────────────────────── */
+.thr-cert-seal { width: 220px; height: 220px; border-radius: 50%; background: linear-gradient(160deg, var(--gold-light), var(--gold-dark)); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lg); padding: 10px; }
+.thr-cert-seal__ring {
+  width: 100%; height: 100%; border-radius: 50%; border: 3px dashed rgba(255,255,255,.7);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; color: #fff; text-align: center;
+}
+.thr-cert-seal__ring i { font-size: 2.75rem; }
+.thr-cert-seal__ring span { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; line-height: 1.4; }
