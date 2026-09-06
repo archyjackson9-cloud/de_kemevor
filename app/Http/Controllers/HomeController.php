@@ -37,14 +37,6 @@ class HomeController extends Controller
             ->orderBy('id')
             ->first();
 
-        // Real treatment photos for the gallery strip (falls back to placeholder tiles in the view).
-        $galleryImages = Service::where('is_active', true)
-            ->whereNotNull('image')
-            ->where('image', '!=', '')
-            ->orderBy('sort_order')
-            ->limit(6)
-            ->get(['name', 'image', 'slug']);
-
         // A photographic backdrop for the dark "Why Choose Us" and CTA sections.
         $backdropService = $featuredServices->first(fn ($s) => (bool) $s->image);
 
@@ -55,7 +47,7 @@ class HomeController extends Controller
 
         return view('home', compact(
             'featuredServices', 'partners', 'heroSlides',
-            'storyMember', 'galleryImages', 'backdropService',
+            'storyMember', 'backdropService',
             's', 'homeValues', 'testimonials'
         ));
     }

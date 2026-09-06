@@ -206,21 +206,22 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-serif); font-weight: 600; line-heigh
 .thr-value-card h3 { color: var(--gold-light); font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: .5rem; }
 .thr-value-card p  { color: rgba(255,255,255,.7); font-size: .9rem; line-height: 1.7; }
 
-/* ── Instagram Grid ──────────────────────────────────────────────────── */
-.thr-instagram-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: .75rem; margin-bottom: 2rem; }
-.thr-instagram-cell { aspect-ratio: 1; border-radius: var(--radius-sm); overflow: hidden; position: relative; display: block; }
-.thr-instagram-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, var(--gold-bg), var(--border)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; color: var(--gold); font-size: .75rem; transition: var(--transition); }
-.thr-instagram-placeholder i { font-size: 1.5rem; }
-.thr-instagram-cell:hover .thr-instagram-placeholder { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: #fff; }
-.thr-instagram-cell__img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
-.thr-instagram-cell:hover .thr-instagram-cell__img { transform: scale(1.08); }
-.thr-instagram-cell__overlay {
-  position: absolute; inset: 0; background: rgba(26,18,8,.45);
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 1.4rem; opacity: 0; transition: var(--transition);
+/* ── Social Media Grid ────────────────────────────────────────────────── */
+.thr-social-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.25rem; margin-bottom: 1rem; }
+.thr-social-card {
+  display: flex; flex-direction: column; align-items: center; gap: .85rem;
+  padding: 2rem 1rem; border-radius: var(--radius-sm); background: #fff;
+  border: 1px solid var(--border); text-decoration: none; color: var(--deep);
+  transition: var(--transition);
 }
-.thr-instagram-cell:hover .thr-instagram-cell__overlay { opacity: 1; }
-@media (max-width: 600px) { .thr-instagram-grid { grid-template-columns: repeat(3, 1fr); } }
+.thr-social-card:hover { transform: translateY(-4px); border-color: var(--social-color); box-shadow: 0 12px 24px rgba(26,18,8,.08); }
+.thr-social-card__icon {
+  width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; color: #fff; background: var(--social-color); transition: var(--transition);
+}
+.thr-social-card__label { font-weight: 600; font-size: .95rem; }
+@media (max-width: 700px) { .thr-social-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 420px) { .thr-social-grid { grid-template-columns: repeat(2, 1fr); } }
 
 /* ── CTA Banner ──────────────────────────────────────────────────────── */
 .thr-cta-banner { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); background-size: cover; background-position: center; padding: 5rem 1.5rem; text-align: center; }

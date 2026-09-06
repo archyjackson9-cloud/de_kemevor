@@ -142,21 +142,26 @@
     </div>
 </div>
 
-{{-- ── Gallery Header ───────────────────────────────────────────────────── --}}
+{{-- ── Social Media Header ─────────────────────────────────────────────── --}}
 <div class="admin-card" style="margin-bottom:1.5rem">
     <div class="admin-card__header">
-        <h3><i class="fab fa-instagram"></i> Gallery Section Header</h3>
+        <h3><i class="fas fa-share-nodes"></i> Social Media Section Header</h3>
+        <span style="font-size:13px;color:#888">The Facebook / Instagram / TikTok / WhatsApp / Snapchat cards beneath Featured Treatments.</span>
     </div>
     <div style="padding:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
         <div class="thr-form__group">
             <label>Eyebrow Text</label>
             <input type="text" name="home_gallery_eyebrow" value="{{ $s->get('home_gallery_eyebrow','Follow Our Journey') }}" placeholder="Follow Our Journey">
         </div>
+        <div class="thr-form__group">
+            <label>Title</label>
+            <input type="text" name="home_gallery_title" value="{{ $s->get('home_gallery_title','Connect With Us') }}" placeholder="Connect With Us">
+        </div>
         <div class="thr-form__group" style="grid-column:1/-1">
             <label>Subtitle</label>
-            <input type="text" name="home_gallery_sub" value="{{ $s->get('home_gallery_sub','A glimpse into our treatments and the space where your transformation happens.') }}" placeholder="Short subtitle...">
+            <input type="text" name="home_gallery_sub" value="{{ $s->get('home_gallery_sub','Follow us on social media for treatment tips, before-and-afters, and behind-the-scenes moments.') }}" placeholder="Short subtitle...">
         </div>
-        <p class="admin-setting-hint" style="grid-column:1/-1">The Instagram handle shown here is pulled from the Contact Page's social media settings.</p>
+        <p class="admin-setting-hint" style="grid-column:1/-1">Facebook, Instagram, TikTok and Snapchat links, plus the phone number WhatsApp uses, are pulled from the <a href="{{ route('admin.pages.contact') }}" style="color:var(--gold);font-weight:600">Contact Page</a> settings.</p>
     </div>
 </div>
 

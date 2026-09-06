@@ -237,42 +237,37 @@ $whyBackdrop = $s->get('home_why_backdrop') ? asset('storage/'.$s->get('home_why
     </div>
 </section>
 
-{{-- ── GALLERY ──────────────────────────────────────────────────────── --}}
+{{-- ── SOCIAL MEDIA ─────────────────────────────────────────────────── --}}
 @php
-$igHandle = \App\Models\SiteSetting::get('contact_ig_handle', '@thehealing_room26');
-$igUrl    = \App\Models\SiteSetting::get('contact_ig_url', 'https://instagram.com/thehealing_room26');
+$waDigits = preg_replace('/\D/', '', \App\Models\SiteSetting::get('contact_phone', '0597173323'));
+if (str_starts_with($waDigits, '0')) {
+    $waDigits = '233' . substr($waDigits, 1);
+} elseif (!str_starts_with($waDigits, '233')) {
+    $waDigits = '233' . $waDigits;
+}
+
+$socialPlatforms = [
+    ['label' => 'Facebook',  'icon' => 'fab fa-facebook-f', 'color' => '#1877F2', 'url' => \App\Models\SiteSetting::get('contact_fb_url', 'https://www.facebook.com/profile.php?id=61578467157568')],
+    ['label' => 'Instagram', 'icon' => 'fab fa-instagram',  'color' => '#E1306C', 'url' => \App\Models\SiteSetting::get('contact_ig_url', 'https://instagram.com/thehealing_room26')],
+    ['label' => 'TikTok',    'icon' => 'fab fa-tiktok',     'color' => '#000000', 'url' => \App\Models\SiteSetting::get('contact_tt_url', 'https://vm.tiktok.com/ZS9ktYUVHgLrB-jCW5R/')],
+    ['label' => 'WhatsApp',  'icon' => 'fab fa-whatsapp',   'color' => '#25D366', 'url' => 'https://wa.me/' . $waDigits],
+    ['label' => 'Snapchat',  'icon' => 'fab fa-snapchat',   'color' => '#FFFC00', 'url' => \App\Models\SiteSetting::get('contact_sc_url', 'https://snapchat.com/add/thehealingroom2')],
+];
 @endphp
 <section class="thr-section thr-section--light">
     <div class="thr-container">
         <div class="thr-section-header">
             <p class="thr-section-header__eyebrow">{{ $s->get('home_gallery_eyebrow', 'Follow Our Journey') }}</p>
-            <h2 class="thr-section-header__title">
-                <i class="fab fa-instagram" style="color:#E1306C"></i>
-                {{ $igHandle }}
-            </h2>
-            <p class="thr-section-header__sub">{{ $s->get('home_gallery_sub', 'A glimpse into our treatments and the space where your transformation happens.') }}</p>
+            <h2 class="thr-section-header__title">{{ $s->get('home_gallery_title', 'Connect With Us') }}</h2>
+            <p class="thr-section-header__sub">{{ $s->get('home_gallery_sub', 'Follow us on social media for treatment tips, before-and-afters, and behind-the-scenes moments.') }}</p>
         </div>
-        <div class="thr-instagram-grid">
-            @for($i = 0; $i < 6; $i++)
-                @if(isset($galleryImages[$i]))
-                <a href="{{ $igUrl }}" target="_blank" class="thr-instagram-cell">
-                    <img src="{{ $galleryImages[$i]->image_url }}" alt="{{ $galleryImages[$i]->name }}" class="thr-instagram-cell__img">
-                    <div class="thr-instagram-cell__overlay"><i class="fab fa-instagram"></i></div>
-                </a>
-                @else
-                <a href="{{ $igUrl }}" target="_blank" class="thr-instagram-cell">
-                    <div class="thr-instagram-placeholder">
-                        <i class="fas fa-camera"></i>
-                        <span>Instagram</span>
-                    </div>
-                </a>
-                @endif
-            @endfor
-        </div>
-        <div class="thr-section__action">
-            <a href="{{ $igUrl }}" target="_blank" class="btn btn-outline-gold">
-                <i class="fab fa-instagram"></i> Follow {{ $igHandle }}
+        <div class="thr-social-grid">
+            @foreach($socialPlatforms as $platform)
+            <a href="{{ $platform['url'] }}" target="_blank" rel="noopener" class="thr-social-card" style="--social-color: {{ $platform['color'] }}">
+                <span class="thr-social-card__icon"><i class="{{ $platform['icon'] }}"></i></span>
+                <span class="thr-social-card__label">{{ $platform['label'] }}</span>
             </a>
+            @endforeach
         </div>
     </div>
 </section>

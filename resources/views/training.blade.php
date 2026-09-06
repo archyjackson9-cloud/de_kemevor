@@ -88,26 +88,7 @@ $programBody = $s->get('training_description', "Gain the knowledge, skills and c
 </section>
 @endif
 
-{{-- ── WHAT YOU'LL GAIN ──────────────────────────────────────────────── --}}
-@if($gainItems->isNotEmpty())
-<section class="thr-section thr-section--dark">
-    <div class="thr-container">
-        <div class="thr-section-header thr-section-header--light">
-            <p class="thr-section-header__eyebrow">{{ $s->get('training_gain_eyebrow', 'What You\'ll Gain') }}</p>
-            <h2 class="thr-section-header__title">{{ $s->get('training_gain_title', 'Your Passion. Our Training. Limitless Possibilities.') }}</h2>
-        </div>
-        <div class="thr-value-grid thr-value-grid--icons">
-            @foreach($gainItems as $item)
-            <div class="thr-expect-item thr-expect-item--dark">
-                <div class="thr-expect-item__icon"><i class="fas {{ $item->icon }}"></i></div>
-                <h4>{{ $item->title }}</h4>
-                <p>{{ $item->body }}</p>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
+
 
 {{-- ── COURSE STRUCTURE ─────────────────────────────────────────────── --}}
 @php
@@ -161,6 +142,27 @@ $phaseIcons  = [1 => 'fa-shield-halved', 2 => 'fa-microscope', 3 => 'fa-comments
         </div>
     </div>
 </section>
+
+{{-- ── WHAT YOU'LL GAIN ──────────────────────────────────────────────── --}}
+@if($gainItems->isNotEmpty())
+<section class="thr-section thr-section--dark">
+    <div class="thr-container">
+        <div class="thr-section-header thr-section-header--light">
+            <p class="thr-section-header__eyebrow">{{ $s->get('training_gain_eyebrow', 'What You\'ll Gain') }}</p>
+            <h2 class="thr-section-header__title">{{ $s->get('training_gain_title', 'Your Passion. Our Training. Limitless Possibilities.') }}</h2>
+        </div>
+        <div class="thr-value-grid thr-value-grid--icons">
+            @foreach($gainItems as $item)
+            <div class="thr-expect-item thr-expect-item--dark">
+                <div class="thr-expect-item__icon"><i class="fas {{ $item->icon }}"></i></div>
+                <h4>{{ $item->title }}</h4>
+                <p>{{ $item->body }}</p>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
 
 {{-- ── ASSESSMENT & CERTIFICATION ───────────────────────────────────── --}}
 <section class="thr-section thr-section--gold-light">

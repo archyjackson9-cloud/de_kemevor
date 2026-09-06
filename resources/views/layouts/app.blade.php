@@ -148,7 +148,7 @@
 
         <div class="thr-footer__bottom">
             <p>&copy; {{ date('Y') }} The Healing Room Esthetic Clinic. All rights reserved.</p>
-            <p>Made with <span style="color:#c8972b">♥</span> in Ghana</p>
+            <p>Powered by Tekpulse</p>
         </div>
     </div>
 </footer>

@@ -40,6 +40,7 @@ class PageController extends Controller
             'home_why_title'          => 'nullable|string|max:150',
             'home_why_backdrop'       => 'nullable|image|mimes:jpeg,png,jpg,webp|max:8192',
             'home_gallery_eyebrow'    => 'nullable|string|max:100',
+            'home_gallery_title'      => 'nullable|string|max:150',
             'home_gallery_sub'        => 'nullable|string|max:300',
             'home_cta_title'          => 'nullable|string|max:150',
             'home_cta_sub'            => 'nullable|string|max:300',
@@ -50,7 +51,7 @@ class PageController extends Controller
             'home_story_badge_num', 'home_story_badge_label',
             'home_services_eyebrow', 'home_services_title', 'home_services_sub',
             'home_why_eyebrow', 'home_why_title',
-            'home_gallery_eyebrow', 'home_gallery_sub',
+            'home_gallery_eyebrow', 'home_gallery_title', 'home_gallery_sub',
             'home_cta_title', 'home_cta_sub',
         ];
 
