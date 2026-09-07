@@ -77,6 +77,7 @@ Route::middleware(\App\Http\Middleware\AdminAuthenticate::class)->prefix('admin'
     Route::post('/customers',           [CustomerController::class, 'store']) ->name('admin.customers.store');
     Route::get('/customers/{customer}', [CustomerController::class, 'show'])  ->name('admin.customers.show');
     Route::put('/customers/{customer}', [CustomerController::class, 'update'])->name('admin.customers.update');
+    Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('admin.customers.destroy');
 
     // Services
     Route::get('/services',                    [ServiceController::class, 'index'])       ->name('admin.services');

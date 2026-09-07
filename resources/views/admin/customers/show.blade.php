@@ -3,8 +3,13 @@
 @section('page-title', 'Customer Profile')
 
 @section('content')
-<div class="admin-back">
+<div class="admin-back" style="display:flex;justify-content:space-between;align-items:center">
     <a href="{{ route('admin.customers') }}" class="btn btn-outline btn-sm"><i class="fas fa-arrow-left"></i> Back to Customers</a>
+    <form method="POST" action="{{ route('admin.customers.destroy', $customer->id) }}"
+          onsubmit="return confirm('Delete {{ addslashes($customer->full_name) }}? This also deletes their booking history, reminders, and discounts. This cannot be undone.')">
+        @csrf @method('DELETE')
+        <button type="submit" class="btn btn-red btn-sm"><i class="fas fa-trash"></i> Delete Customer</button>
+    </form>
 </div>
 
 <div class="admin-two-col">

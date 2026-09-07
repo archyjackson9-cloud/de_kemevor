@@ -66,8 +66,13 @@
                         </span>
                     </td>
                     <td>{{ $c->loyalty_points }} pts</td>
-                    <td>
+                    <td class="admin-table__actions">
                         <a href="{{ route('admin.customers.show', $c->id) }}" class="btn btn-xs btn-outline" title="View"><i class="fas fa-eye"></i></a>
+                        <form method="POST" action="{{ route('admin.customers.destroy', $c->id) }}" style="display:inline"
+                              onsubmit="return confirm('Delete {{ addslashes($c->full_name) }}? This also deletes their booking history, reminders, and discounts. This cannot be undone.')">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn btn-xs btn-red" title="Delete"><i class="fas fa-trash"></i></button>
+                        </form>
                     </td>
                 </tr>
                 @endforeach

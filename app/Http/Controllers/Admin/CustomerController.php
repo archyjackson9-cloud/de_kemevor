@@ -73,4 +73,12 @@ class CustomerController extends Controller
 
         return redirect()->back()->with('success', 'Customer updated successfully.');
     }
+
+    public function destroy(Customer $customer)
+    {
+        $name = $customer->full_name;
+        $customer->delete();
+
+        return redirect()->route('admin.customers')->with('success', "{$name} and their booking history have been deleted.");
+    }
 }
