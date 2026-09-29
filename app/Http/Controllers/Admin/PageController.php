@@ -222,7 +222,7 @@ class PageController extends Controller
             'about_stat_3_label'  => 'nullable|string|max:60',
             'about_stat_4_num'    => 'nullable|string|max:20',
             'about_stat_4_label'  => 'nullable|string|max:60',
-            'about_mission'       => 'nullable|string|max:500',
+            'about_mission'       => 'nullable|string|max:1000',
             'about_cta_title'     => 'nullable|string|max:150',
             'about_cta_sub'       => 'nullable|string|max:300',
         ]);
