@@ -135,6 +135,9 @@
                     <span class="thr-legend thr-legend--booked">Unavailable</span>
                     <span class="thr-legend thr-legend--past">Past</span>
                 </div>
+                <p style="font-size:13px;color:#888;margin-top:.5rem">
+                    <i class="fas fa-circle-info"></i> We're closed on Mondays. Saturday & Sunday appointments start from 12:00 PM.
+                </p>
 
                 <div class="thr-booking-step__nav">
                     <button type="button" class="btn btn-outline" onclick="prevStep(1)">
@@ -346,16 +349,17 @@ function renderCalendar() {
         const cell = document.createElement('div');
         const thisDate = new Date(year, month, d);
         const isPast   = thisDate < today;
-        const isSun    = thisDate.getDay() === 0;
+        const isMon    = thisDate.getDay() === 1;
         const dateStr  = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         const isSelected = selectedDate === dateStr;
 
         cell.className = 'thr-cal-day';
-        if (isPast || isSun) cell.classList.add('thr-cal-day--past');
+        if (isPast || isMon) cell.classList.add('thr-cal-day--past');
         if (isSelected)      cell.classList.add('thr-cal-day--selected');
         cell.textContent = d;
+        if (isMon && !isPast) cell.title = 'Closed on Mondays';
 
-        if (!isPast && !isSun) {
+        if (!isPast && !isMon) {
             cell.addEventListener('click', () => selectDate(dateStr, cell));
         }
         grid.appendChild(cell);

@@ -58,6 +58,14 @@ class BookingController extends Controller
             'promo_code'        => 'nullable|string|max:20',
         ]);
 
+        $dayOfWeek = (int) date('w', strtotime($validated['booking_date']));
+        if ($dayOfWeek === 1) {
+            return back()->withErrors(['booking_date' => "We're closed on Mondays. Please choose another day."])->withInput();
+        }
+        if (in_array($dayOfWeek, [0, 6], true) && $validated['booking_time'] < '12:00') {
+            return back()->withErrors(['booking_time' => 'Weekend appointments start from 12:00 PM.'])->withInput();
+        }
+
         // Find or create customer
         $customer = Customer::where('email', $validated['email'])->first();
         $isNew    = !$customer;
@@ -168,11 +176,20 @@ class BookingController extends Controller
         $date = $request->query('date');
         if (!$date) return response()->json([]);
 
+        // Closed on Mondays
+        $dayOfWeek = (int) date('w', strtotime($date));
+        if ($dayOfWeek === 1) return response()->json([]);
+
         $allSlots = [
             '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
             '12:00', '13:00', '13:30', '14:00', '14:30', '15:00',
             '15:30', '16:00', '16:30', '17:00',
         ];
+
+        // Weekend appointments only start from 12:00 PM
+        if (in_array($dayOfWeek, [0, 6], true)) {
+            $allSlots = array_values(array_filter($allSlots, fn ($slot) => $slot >= '12:00'));
+        }
 
         $booked = Booking::where('booking_date', $date)
             ->whereIn('status', ['pending', 'confirmed'])
