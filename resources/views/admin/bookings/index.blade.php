@@ -185,7 +185,7 @@
                 <select name="service_id" required>
                     <option value="">Select service…</option>
                     @foreach($services as $svc)
-                    <option value="{{ $svc->id }}">{{ $svc->name }} – GHS {{ number_format($svc->price_from, 0) }}</option>
+                    <option value="{{ $svc->id }}">{{ $svc->name }} – {{ $svc->price_label }}</option>
                     @endforeach
                 </select>
             </div>

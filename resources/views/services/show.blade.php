@@ -31,12 +31,12 @@
         ],
     ]),
     'areaServed' => 'Ghana',
-    'offers' => [
+    'offers' => array_filter([
         '@type' => 'Offer',
         'priceCurrency' => 'GHS',
-        'price' => number_format((float) $service->price_from, 2, '.', ''),
+        'price' => $service->has_price ? number_format((float) $service->price_from, 2, '.', '') : null,
         'url' => route('services.show', $service->slug),
-    ],
+    ]),
 ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
@@ -64,8 +64,8 @@
                 <div class="thr-service-hero__stat">
                     <i class="fas fa-tag"></i>
                     <span>
-                        <span class="thr-service-hero__stat-label">Starting From</span>
-                        <span class="thr-service-hero__stat-value">GHS {{ number_format($service->price_from, 0) }}</span>
+                        <span class="thr-service-hero__stat-label">{{ $service->has_price ? 'Starting From' : 'Pricing' }}</span>
+                        <span class="thr-service-hero__stat-value">{{ $service->price_label }}</span>
                     </span>
                 </div>
                 <div class="thr-service-hero__stat">
@@ -105,6 +105,31 @@
                     @endforelse
                 </article>
 
+                @if($service->ideal_for_list || $service->highlight_list)
+                <div class="thr-service-detail">
+                    @if($service->ideal_for_list)
+                    <div class="thr-service-detail__col">
+                        <h3><i class="fas fa-user-check"></i> Who It's For</h3>
+                        <ul>
+                            @foreach($service->ideal_for_list as $item)
+                            <li><i class="fas fa-check"></i> {{ $item }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+                    @if($service->highlight_list)
+                    <div class="thr-service-detail__col">
+                        <h3><i class="fas fa-spa"></i> What's Included</h3>
+                        <ul>
+                            @foreach($service->highlight_list as $item)
+                            <li><i class="fas fa-check"></i> {{ $item }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+                </div>
+                @endif
+
                 <div class="thr-expect-grid">
                     <div class="thr-expect-item">
                         <div class="thr-expect-item__icon"><i class="fas fa-comments"></i></div>
@@ -139,7 +164,7 @@
                         <a href="{{ route('services.show', $related->slug) }}" class="thr-related-card">
                             <div class="thr-related-card__name">{{ $related->name }}</div>
                             <p class="thr-related-card__desc">{{ Str::limit($related->short_description, 90) }}</p>
-                            <div class="thr-related-card__price">From GHS {{ number_format($related->price_from, 0) }}</div>
+                            <div class="thr-related-card__price">{{ $related->has_price ? 'From ' : '' }}{{ $related->price_label }}</div>
                         </a>
                         @endforeach
                     </div>
@@ -158,8 +183,8 @@
                     <h3 style="font-family:var(--font-serif);font-size:1.3rem">{{ $service->name }}</h3>
 
                     <div class="thr-booking-card__price-row">
-                        <span class="thr-booking-card__price-label">From</span>
-                        <span class="thr-booking-card__price-value">GHS {{ number_format($service->price_from, 0) }}</span>
+                        @if($service->has_price)<span class="thr-booking-card__price-label">From</span>@endif
+                        <span class="thr-booking-card__price-value">{{ $service->price_label }}</span>
                     </div>
 
                     <div class="thr-booking-card__row">

@@ -53,8 +53,8 @@
                     </div>
                     <div class="thr-service-item__aside">
                         <div class="thr-service-item__price">
-                            <span class="thr-service-item__price-label">From</span>
-                            <span class="thr-service-item__price-amount">GHS {{ number_format($service->price_from, 0) }}</span>
+                            @if($service->has_price)<span class="thr-service-item__price-label">From</span>@endif
+                            <span class="thr-service-item__price-amount">{{ $service->price_label }}</span>
                         </div>
                         <a href="{{ route('services.show', $service->slug) }}" class="btn btn-outline-gold btn-sm">
                             Learn More

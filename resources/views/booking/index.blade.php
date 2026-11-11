@@ -74,7 +74,7 @@
                                     <span class="thr-service-picker__name">{{ $service->name }}</span>
                                     <span class="thr-service-picker__meta">
                                         <span><i class="fas fa-clock"></i> {{ $service->duration }}</span>
-                                        <span><i class="fas fa-tag"></i> From GHS {{ number_format($service->price_from, 0) }}</span>
+                                        <span><i class="fas fa-tag"></i> {{ $service->has_price ? 'From ' : '' }}{{ $service->price_label }}</span>
                                     </span>
                                 </div>
                                 <div class="thr-service-picker__check"><i class="fas fa-check"></i></div>

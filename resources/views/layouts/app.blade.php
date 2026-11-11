@@ -126,6 +126,7 @@
                     <li><a href="{{ route('services') }}">Skin Treatments</a></li>
                     <li><a href="{{ route('services') }}">Rejuvenation</a></li>
                     <li><a href="{{ route('services') }}">Body Enhancement</a></li>
+                    <li><a href="{{ route('services') }}">Massage Therapy</a></li>
                 </ul>
             </div>
 

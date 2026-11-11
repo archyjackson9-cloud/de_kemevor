@@ -14,6 +14,7 @@ class ServicesController extends Controller
             'skin_treatments'  => ['label' => 'Skin Treatments',          'icon' => '✨', 'color' => 'amber'],
             'rejuvenation'     => ['label' => 'Rejuvenation',             'icon' => '🌸', 'color' => 'purple'],
             'body_enhancement' => ['label' => 'Body Enhancement',         'icon' => '💪', 'color' => 'green'],
+            'massage'          => ['label' => 'Massage Therapy',          'icon' => '🧖', 'color' => 'indigo'],
         ];
 
         $servicesByCategory = [];

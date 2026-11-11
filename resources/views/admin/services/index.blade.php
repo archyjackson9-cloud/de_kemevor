@@ -29,7 +29,7 @@
                 @php
                     $editPayload = \Illuminate\Support\Arr::only($s->toArray(), [
                         'id', 'name', 'category', 'short_description', 'description',
-                        'meta_title', 'meta_description', 'duration', 'price_from', 'sort_order',
+                        'ideal_for', 'highlights', 'meta_title', 'meta_description', 'duration', 'price_from', 'sort_order',
                     ]);
                     $editPayload['image_url'] = $s->image ? $s->image_url : '';
                     $editPayloadJson = json_encode($editPayload);
@@ -53,7 +53,7 @@
                         </span>
                     </td>
                     <td>{{ $s->duration }}</td>
-                    <td>GHS {{ number_format($s->price_from, 0) }}</td>
+                    <td>{{ $s->has_price ? $s->price_label : 'On hold' }}</td>
                     <td>
                         <form method="POST" action="{{ route('admin.services.toggle', $s->id) }}" style="display:inline">
                             @csrf
@@ -110,6 +110,7 @@
                         <option value="skin_treatments">Skin Treatments</option>
                         <option value="rejuvenation">Rejuvenation</option>
                         <option value="body_enhancement">Body Enhancement</option>
+                        <option value="massage">Massage Therapy</option>
                     </select>
                 </div>
             </div>
@@ -120,6 +121,16 @@
             <div class="thr-form__group">
                 <label>Full Article <span style="font-size:12px;color:#888">(shown on the service's own page — explain why clients should book this treatment at The Healing Room. Separate paragraphs with a blank line.)</span></label>
                 <textarea name="description" rows="6" placeholder="Write 2-4 paragraphs about this treatment: what it addresses, what to expect, and why The Healing Room…" maxlength="4000"></textarea>
+            </div>
+            <div class="thr-form__row">
+                <div class="thr-form__group">
+                    <label>Ideal For <span style="font-size:12px;color:#888">(optional — one per line)</span></label>
+                    <textarea name="ideal_for" rows="4" maxlength="1500" placeholder="New mothers&#10;Desk-based professionals"></textarea>
+                </div>
+                <div class="thr-form__group">
+                    <label>What's Included <span style="font-size:12px;color:#888">(optional — one per line)</span></label>
+                    <textarea name="highlights" rows="4" maxlength="1500" placeholder="Consultation&#10;Full-body relaxation strokes"></textarea>
+                </div>
             </div>
             <div class="thr-form__row">
                 <div class="thr-form__group">
@@ -180,6 +191,7 @@
                         <option value="skin_treatments">Skin Treatments</option>
                         <option value="rejuvenation">Rejuvenation</option>
                         <option value="body_enhancement">Body Enhancement</option>
+                        <option value="massage">Massage Therapy</option>
                     </select>
                 </div>
             </div>
@@ -190,6 +202,16 @@
             <div class="thr-form__group">
                 <label>Full Article <span style="font-size:12px;color:#888">(shown on the service's own page. Separate paragraphs with a blank line.)</span></label>
                 <textarea name="description" id="editArticle" rows="6" maxlength="4000"></textarea>
+            </div>
+            <div class="thr-form__row">
+                <div class="thr-form__group">
+                    <label>Ideal For <span style="font-size:12px;color:#888">(one per line)</span></label>
+                    <textarea name="ideal_for" id="editIdealFor" rows="4" maxlength="1500"></textarea>
+                </div>
+                <div class="thr-form__group">
+                    <label>What's Included <span style="font-size:12px;color:#888">(one per line)</span></label>
+                    <textarea name="highlights" id="editHighlights" rows="4" maxlength="1500"></textarea>
+                </div>
             </div>
             <div class="thr-form__row">
                 <div class="thr-form__group">
@@ -247,6 +269,8 @@ function editService(btn) {
     document.getElementById('editCategory').value     = s.category ?? '';
     document.getElementById('editDesc').value         = s.short_description ?? '';
     document.getElementById('editArticle').value      = s.description ?? '';
+    document.getElementById('editIdealFor').value     = s.ideal_for ?? '';
+    document.getElementById('editHighlights').value   = s.highlights ?? '';
     document.getElementById('editDuration').value     = s.duration ?? '';
     document.getElementById('editPrice').value        = s.price_from ?? '';
     document.getElementById('editSort').value         = s.sort_order ?? 0;

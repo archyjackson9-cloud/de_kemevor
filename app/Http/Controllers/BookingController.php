@@ -18,6 +18,7 @@ class BookingController extends Controller
             'skin_treatments'  => ['label' => 'Skin Treatments',          'icon' => '✨', 'color' => 'amber'],
             'rejuvenation'     => ['label' => 'Rejuvenation',             'icon' => '🌸', 'color' => 'purple'],
             'body_enhancement' => ['label' => 'Body Enhancement',         'icon' => '💪', 'color' => 'green'],
+            'massage'          => ['label' => 'Massage Therapy',          'icon' => '🧖', 'color' => 'indigo'],
         ];
 
         $services = Service::where('is_active', true)->orderBy('sort_order')->get();

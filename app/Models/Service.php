@@ -10,6 +10,7 @@ class Service extends Model
     protected $fillable = [
         'name', 'slug', 'category', 'short_description', 'description',
         'meta_title', 'meta_description',
+        'ideal_for', 'highlights',
         'duration', 'price_from', 'is_active', 'sort_order', 'image',
     ];
 
@@ -31,6 +32,7 @@ class Service extends Model
             'skin_treatments'   => 'Skin Treatments',
             'rejuvenation'      => 'Rejuvenation',
             'body_enhancement'  => 'Body Enhancement',
+            'massage'           => 'Massage Therapy',
             default             => $this->category,
         };
     }
@@ -43,8 +45,39 @@ class Service extends Model
             'skin_treatments'   => 'amber',
             'rejuvenation'      => 'purple',
             'body_enhancement'  => 'green',
+            'massage'           => 'indigo',
             default             => 'gold',
         };
+    }
+
+    public function getHasPriceAttribute(): bool
+    {
+        return (float) $this->price_from > 0;
+    }
+
+    /** "GHS 250", or "Price on request" while pricing is on hold (price_from = 0). */
+    public function getPriceLabelAttribute(): string
+    {
+        return $this->has_price
+            ? 'GHS ' . number_format($this->price_from, 0)
+            : 'Price on request';
+    }
+
+    public function getIdealForListAttribute(): array
+    {
+        return self::splitLines($this->ideal_for);
+    }
+
+    public function getHighlightListAttribute(): array
+    {
+        return self::splitLines($this->highlights);
+    }
+
+    private static function splitLines(?string $text): array
+    {
+        return $text
+            ? array_values(array_filter(array_map('trim', preg_split('/\R/', $text))))
+            : [];
     }
 
     public function getImageUrlAttribute(): string
@@ -88,6 +121,7 @@ class Service extends Model
             'skin_treatments'   => '✨',
             'rejuvenation'      => '🌸',
             'body_enhancement'  => '💪',
+            'massage'           => '🧖',
             default             => '💎',
         };
     }

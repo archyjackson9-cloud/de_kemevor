@@ -140,7 +140,7 @@ $testimonialList = $testimonials->count() ? $testimonials : collect([
                 <p class="thr-service-card__desc">{{ $service->short_description }}</p>
                 <div class="thr-service-card__meta">
                     <span><i class="fas fa-clock"></i> {{ $service->duration }}</span>
-                    <span><i class="fas fa-tag"></i> From GHS {{ number_format($service->price_from, 0) }}</span>
+                    <span><i class="fas fa-tag"></i> {{ $service->has_price ? 'From ' : '' }}{{ $service->price_label }}</span>
                 </div>
                 <a href="{{ route('services.show', $service->slug) }}" class="thr-service-card__cta">
                     Learn More <i class="fas fa-arrow-right"></i>

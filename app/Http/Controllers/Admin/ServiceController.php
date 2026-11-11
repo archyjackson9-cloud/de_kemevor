@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
-    private const CATEGORIES = 'maternity_postop,body_treatments,skin_treatments,rejuvenation,body_enhancement';
+    private const CATEGORIES = 'maternity_postop,body_treatments,skin_treatments,rejuvenation,body_enhancement,massage';
 
     public function index()
     {
@@ -25,6 +25,8 @@ class ServiceController extends Controller
             'category'          => 'required|in:' . self::CATEGORIES,
             'short_description' => 'required|string|max:300',
             'description'       => 'nullable|string|max:4000',
+            'ideal_for'         => 'nullable|string|max:1500',
+            'highlights'        => 'nullable|string|max:1500',
             'meta_title'        => 'nullable|string|max:160',
             'meta_description'  => 'nullable|string|max:300',
             'duration'          => 'required|string|max:50',
@@ -53,6 +55,8 @@ class ServiceController extends Controller
             'category'          => 'sometimes|in:' . self::CATEGORIES,
             'short_description' => 'sometimes|string|max:300',
             'description'       => 'nullable|string|max:4000',
+            'ideal_for'         => 'nullable|string|max:1500',
+            'highlights'        => 'nullable|string|max:1500',
             'meta_title'        => 'nullable|string|max:160',
             'meta_description'  => 'nullable|string|max:300',
             'duration'          => 'sometimes|string|max:50',
